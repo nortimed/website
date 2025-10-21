@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Elastic Bandage",
+    "category": "Physiotherapy",
+    "subCategory": "Bandages",
+    "subDivision": "Elastic Bandages",
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": ["/images/elastic-bandage-1.jpg", "/images/elastic-bandage-2.jpg"],
+    "colorOptions": ["Beige", "White"]
+  },
+  {
+    "name": "Baby Bottle",
+    "category": "Nursery",
+    "subCategory": "Feeding",
+    "subDivision": "Bottles",
+    "description": "Safe and ergonomic baby bottle.",
+    "images": ["/images/baby-bottle-1.jpg"],
+    "colorOptions": []
+  }
+]

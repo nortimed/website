@@ -1,0 +1,45 @@
+.nortimed-landing-page/nortimed-landing-page/src/styles/Home.module.css
+
+.hero {
+  background-color: #f0f4f8;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  color: #333;
+}
+
+.hero button {
+  background-color: #0070f3;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.productShowcase {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 40px 20px;
+}
+
+.featureSection {
+  background-color: #e9ecef;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.contactForm {
+  padding: 40px 20px;
+}
+
+.footer {
+  background-color: #343a40;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
