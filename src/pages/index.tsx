@@ -13,12 +13,17 @@ const PRODUCTS_PER_PAGE = 6;
 
 const Home: React.FC = () => {
   const [category, setCategory] = useState('all');
+  const [subCategory, setSubCategory] = useState('all');
+  const [subDivision, setSubDivision] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter products by category
-  const filteredProducts = category && category !== 'all'
-    ? productsData.filter((p) => p.category.toLowerCase() === category.toLowerCase())
-    : productsData;
+  // Filter products by category, subCategory, subDivision
+  const filteredProducts = productsData.filter((p) => {
+    const catMatch = category === 'all' || p.category.toLowerCase() === category.toLowerCase();
+    const subCatMatch = subCategory === 'all' || p.subCategory.toLowerCase() === subCategory.toLowerCase();
+    const subDivMatch = subDivision === 'all' || p.subDivision.toLowerCase() === subDivision.toLowerCase();
+    return catMatch && subCatMatch && subDivMatch;
+  });
 
   // Pagination logic
   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE) || 1;
@@ -27,8 +32,16 @@ const Home: React.FC = () => {
     currentPage * PRODUCTS_PER_PAGE
   );
 
-  const handleFilterChange = (cat: string) => {
+  const handleCategoryChange = (cat: string) => {
     setCategory(cat);
+    setCurrentPage(1);
+  };
+  const handleSubCategoryChange = (subCat: string) => {
+    setSubCategory(subCat);
+    setCurrentPage(1);
+  };
+  const handleSubDivisionChange = (subDiv: string) => {
+    setSubDivision(subDiv);
     setCurrentPage(1);
   };
 
@@ -43,7 +56,12 @@ const Home: React.FC = () => {
       <HeroSection />
       <ProductShowcase
         products={paginatedProducts}
-        onFilterChange={handleFilterChange}
+        category={category}
+        subCategory={subCategory}
+        subDivision={subDivision}
+        onCategoryChange={handleCategoryChange}
+        onSubCategoryChange={handleSubCategoryChange}
+        onSubDivisionChange={handleSubDivisionChange}
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}

@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Product } from '../types';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './components/ui/card';
-import { Button } from './components/ui/button';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './ui/card';
+import { Button } from './ui/button';
 import Link from 'next/link';
 import {
   Select,
@@ -10,11 +9,18 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from './components/ui/select';
+} from './ui/select';
+import ProductTreeDropdown from './ProductTreeDropdown';
 
 interface ProductShowcaseProps {
   products: Product[];
-  onFilterChange: (category: string) => void;
+  onFilterChange: (filter: { category: string; subCategory?: string; subDivision?: string }) => void;
+  category: string;
+  subCategory?: string;
+  subDivision?: string;
+  onCategoryChange: (category: string) => void;
+  onSubCategoryChange: (subCategory: string) => void;
+  onSubDivisionChange: (subDivision: string) => void;
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
@@ -26,22 +32,20 @@ const ProductShowcase: React.FC<ProductShowcaseProps> = ({
   currentPage,
   totalPages,
   onPageChange,
+  category,
+  subCategory,
+  subDivision,
+  onCategoryChange,
+  onSubCategoryChange,
+  onSubDivisionChange,
 }) => {
   return (
     <section id="products" className="py-16 px-4 bg-white">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">Our Products</h2>
-        <div className="flex justify-end mb-6 max-w-xs ml-auto">
-          <Select onValueChange={onFilterChange}>
-            <SelectTrigger>
-              <SelectValue placeholder="All Categories" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="nursery">Nursery</SelectItem>
-              <SelectItem value="physiotherapy">Physiotherapy</SelectItem>
-            </SelectContent>
-          </Select>
+        {/* Nested dropdown menu for category/sub-category/sub-division tree */}
+        <div className="flex justify-start mb-6">
+          <ProductTreeDropdown onSelect={onFilterChange} />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {products.map((product) => (
