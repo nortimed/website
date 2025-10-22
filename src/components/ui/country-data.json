@@ -1,0 +1,8 @@
+[
+  { "name": "Portugal", "code": "PT", "dial_code": "+351", "flag": "🇵🇹" },
+  { "name": "Spain", "code": "ES", "dial_code": "+34", "flag": "🇪🇸" },
+  { "name": "France", "code": "FR", "dial_code": "+33", "flag": "🇫🇷" },
+  { "name": "United States", "code": "US", "dial_code": "+1", "flag": "🇺🇸" },
+  { "name": "Brazil", "code": "BR", "dial_code": "+55", "flag": "🇧🇷" },
+  { "name": "United Kingdom", "code": "GB", "dial_code": "+44", "flag": "🇬🇧" }
+]

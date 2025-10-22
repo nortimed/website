@@ -10,7 +10,9 @@ import {
     SelectContent,
     SelectItem,
 } from "../components/ui/select";
+import ProductTreeModal from "../components/ProductTreeModal";
 import { Card } from "../components/ui/card";
+import { PhoneInput } from "../components/ui/phone-input";
 
 interface QuoteProduct {
     name: string;
@@ -44,7 +46,9 @@ const RequestQuote: React.FC = () => {
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [emailError, setEmailError] = useState("");
     const [phone, setPhone] = useState("");
+    const [country, setCountry] = useState({ name: "Portugal", code: "PT", dial_code: "+351", flag: "🇵🇹" });
     const [selectedProducts, setSelectedProducts] = useState<QuoteProduct[]>([]);
     const [productToAdd, setProductToAdd] = useState("");
     const [quantityToAdd, setQuantityToAdd] = useState(1);
@@ -126,7 +130,17 @@ const RequestQuote: React.FC = () => {
             }
         });
     }
-    const availableProducts = getAvailableProducts(selectedProducts);
+    // Filter state for the combobox
+    const [filter, setFilter] = useState<{ category?: string; subCategory?: string; subDivision?: string }>({});
+
+    // Filter products by combobox
+    const filteredProducts = productsData.filter((p) => {
+        if (filter.category && filter.category !== "all" && p.category !== filter.category) return false;
+        if (filter.subCategory && filter.subCategory !== "all" && p.subCategory !== filter.subCategory) return false;
+        if (filter.subDivision && filter.subDivision !== "all" && p.subDivision !== filter.subDivision) return false;
+        return true;
+    });
+    const availableProducts = getAvailableProducts(selectedProducts).filter((p) => filteredProducts.includes(p));
     const noMoreProducts = availableProducts.length === 0;
 
     const handleAddProduct = () => {
@@ -171,8 +185,33 @@ const RequestQuote: React.FC = () => {
         setSelectedProducts((prev) => prev.filter((_, i) => i !== index));
     };
 
+    // Auto-detect country on mount
+    useEffect(() => {
+        if (typeof window !== "undefined" && window.navigator) {
+            fetch("https://ipapi.co/json/")
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.country_code) {
+                        import("../components/ui/country-data.json").then((module) => {
+                            const found = module.default.find((c) => c.code === data.country_code);
+                            if (found) setCountry(found);
+                        });
+                    }
+                });
+        }
+    }, []);
+
+    function validateEmail(email: string) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (!validateEmail(email)) {
+            setEmailError("Please enter a valid email address.");
+            return;
+        }
+        setEmailError("");
         // Here you would send the quote request to your backend or email
         alert("Quote request submitted!");
     };
@@ -197,16 +236,24 @@ const RequestQuote: React.FC = () => {
                         <Input
                             type="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                if (emailError) setEmailError("");
+                            }}
                             required
+                            className={emailError ? "border-red-500" : undefined}
                         />
+                        {emailError && (
+                            <div className="text-xs text-red-600 mt-1">{emailError}</div>
+                        )}
                     </div>
                     <div className="md:col-span-2">
                         <label className="block mb-1 font-medium">Phone</label>
-                        <Input
+                        <PhoneInput
                             value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            required
+                            onChange={setPhone}
+                            country={country}
+                            onCountryChange={setCountry}
                         />
                     </div>
                 </div>
@@ -230,7 +277,14 @@ const RequestQuote: React.FC = () => {
                     </div>
                     <h2 className="text-xl font-semibold mb-4">Products</h2>
                     <div className="flex flex-col md:flex-row gap-4 items-end mb-6">
-                        <div className="flex-1">
+                        <div className="flex-1 flex flex-col gap-2">
+                            <ProductTreeModal
+                                onSelect={(f) => {
+                                    setFilter(f);
+                                    setProductToAdd("");
+                                    setColorToAdd("");
+                                }}
+                            />
                             <Select
                                 value={productToAdd}
                                 onValueChange={(val) => {
@@ -248,7 +302,7 @@ const RequestQuote: React.FC = () => {
                                         }
                                     />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent className="max-h-80 overflow-y-auto">
                                     {availableProducts.map((product) => {
                                         let label = product.name;
                                         const availableColors = Array.isArray(product.colorOptions)
@@ -264,14 +318,14 @@ const RequestQuote: React.FC = () => {
                                             label += ` (${availableColors[0]})`;
                                         }
                                         return (
-                                            <SelectItem key={product.name} value={product.name}>
-                                                <div className="flex items-center gap-2">
+                                            <SelectItem key={product.name} value={product.name} className="py-4 px-4 min-h-[64px] text-base">
+                                                <div className="flex items-center gap-4">
                                                     <img
                                                         src={product.images[0]}
                                                         alt={product.name}
-                                                        className="w-8 h-8 object-cover rounded"
+                                                        className="w-12 h-12 object-cover rounded"
                                                     />
-                                                    <span>{label}</span>
+                                                    <span className="font-medium">{label}</span>
                                                 </div>
                                             </SelectItem>
                                         );
@@ -480,7 +534,7 @@ const RequestQuote: React.FC = () => {
                 </div>
                 <Button
                     type="submit"
-                    className="w-full py-3 font-semibold text-lg mt-8"
+                    className="w-full py-3 font-semibold text-lg mt-8 bg-blue-700 hover:bg-blue-800 text-white"
                 >
                     Submit Quote Request
                 </Button>

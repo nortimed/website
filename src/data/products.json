@@ -84,48 +84,275 @@
     "colorOptions": []
   },
   {
-    "name": "Elastic Bandage",
-    "category": "Physiotherapy",
-    "subCategory": "Bandages",
-    "subDivision": "Elastic Bandages",
+    "name": "Ligadura rede tubular elástica N1",
+    "category": "Fisioterapia",
+    "subCategory": "Ligaduras",
+    "subDivision": "Rede tubular",
     "description": "High-quality elastic bandage for support and compression.",
     "images": [
       "/images/elastic-bandage-1.jpg",
       "/images/elastic-bandage-2.jpg"
     ],
-    "colorOptions": ["Beige", "White", "Black"]
+    "colorOptions": []
   },
   {
-    "name": "Elastic Bandage",
-    "category": "Physiotherapy",
-    "subCategory": "Bandages",
-    "subDivision": "Elastic Bandages",
+    "name": "Ligadura rede tubular elástica N2",
+    "category": "Fisioterapia",
+    "subCategory": "Ligaduras",
+    "subDivision": "Rede tubular",
     "description": "High-quality elastic bandage for support and compression.",
     "images": [
       "/images/elastic-bandage-1.jpg",
       "/images/elastic-bandage-2.jpg"
     ],
-    "colorOptions": ["Beige", "White", "Black"]
+    "colorOptions": []
   },
   {
-    "name": "Elastic Bandage",
-    "category": "Physiotherapy",
-    "subCategory": "Bandages",
-    "subDivision": "Elastic Bandages",
+    "name": "Ligadura rede tubular elástica N3",
+    "category": "Fisioterapia",
+    "subCategory": "Ligaduras",
+    "subDivision": "Rede tubular",
     "description": "High-quality elastic bandage for support and compression.",
     "images": [
       "/images/elastic-bandage-1.jpg",
       "/images/elastic-bandage-2.jpg"
     ],
-    "colorOptions": ["Beige", "White", "Black"]
+    "colorOptions": []
   },
   {
-    "name": "Baby Bottle",
-    "category": "Nursery",
-    "subCategory": "Feeding",
-    "subDivision": "Bottles",
-    "description": "Safe and ergonomic baby bottle.",
-    "images": ["/images/baby-bottle-1.jpg"],
+    "name": "Ligadura rede tubular elástica N4",
+    "category": "Fisioterapia",
+    "subCategory": "Ligaduras",
+    "subDivision": "Rede tubular",
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": []
+  },
+  {
+    "name": "Ligadura rede tubular elástica N6",
+    "category": "Fisioterapia",
+    "subCategory": "Ligaduras",
+    "subDivision": "Rede tubular",
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": []
+  },
+  {
+    "name": "Ligadura rede tubular elástica N8",
+    "category": "Fisioterapia",
+    "subCategory": "Ligaduras",
+    "subDivision": "Rede tubular",
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": []
+  },
+  {
+    "name": "Ligadura elástica Suporte Elastoband Fix 8cmx10m",
+    "category": "Fisioterapia",
+    "subCategory": "Ligaduras",
+    "subDivision": "Elásticas",
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": []
+  },
+  {
+    "name": "Ligadura elástica Suporte Elastoband Fix 10cmx10m",
+    "category": "Fisioterapia",
+    "subCategory": "Ligaduras",
+    "subDivision": "Elásticas",
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": []
+  },
+  {
+    "name": "Ligadura elástica Suporte Elastoband Flex 8cmx10m",
+    "category": "Fisioterapia",
+    "subCategory": "Ligaduras",
+    "subDivision": "Elásticas",
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": []
+  },
+  {
+    "name": "Ligadura elástica Suporte Elastoband Flex 10cmx10m",
+    "category": "Fisioterapia",
+    "subCategory": "Ligaduras",
+    "subDivision": "Elásticas",
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": []
+  },
+  {
+    "name": "Ligdarura Elástica Tensoplast P.H 5cmx2,7m",
+    "category": "Fisioterapia",
+    "subCategory": "Ligaduras",
+    "subDivision": "Elásticas",
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": []
+  },
+  {
+    "name": "Ligdarura Elástica Tensoplast P.H 7,5cmx2,7m",
+    "category": "Fisioterapia",
+    "subCategory": "Ligaduras",
+    "subDivision": "Elásticas",
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": []
+  },
+  {
+    "name": "KinésioTape YellowSport 5cmx5m",
+    "category": "Fisioterapia",
+    "subCategory": "Ligaduras",
+    "subDivision": "Elásticas",
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": [
+      "Black",
+      "Red",
+      "Beige"
+    ]
+  },
+  {
+    "name": "KinésioTape YellowSport 7,5mx5m",
+    "category": "Fisioterapia",
+    "subCategory": "Ligaduras",
+    "subDivision": "Elásticas",
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": [
+      "Black",
+      "Red",
+      "Beige"
+    ]
+  },
+  {
+    "name": "Tape Desportivo Yellow Sport  2,5cmx9,1m",
+    "category": "Fisioterapia",
+    "subCategory": "Tape e Pré Tape",
+    "subDivision": null,
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": ["White"]
+  },
+  {
+    "name": "Tape Desportivo Yellow Sport  3,8 cmx9,1m",
+    "category": "Fisioterapia",
+    "subCategory": "Tape e Pré Tape",
+    "subDivision": null,
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": ["Blue", "Black", "Gold", "Red"]
+  },
+  {
+    "name": "Tape Desportivo Yellow Sport  5cmx9,1m",
+    "category": "Fisioterapia",
+    "subCategory": "Tape e Pré Tape",
+    "subDivision": null,
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": ["White"]
+  },
+  {
+    "name": "Tape Desportivo Cramer 3,8cmx9,1m",
+    "category": "Fisioterapia",
+    "subCategory": "Tape e Pré Tape",
+    "subDivision": null,
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": ["Blue", "Black", "Gold", "Red"]
+  },
+  {
+    "name": "Tape Desportivo Cramer 5cmx10m",
+    "category": "Fisioterapia",
+    "subCategory": "Tape e Pré Tape",
+    "subDivision": null,
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": ["White"]
+  },
+  {
+    "name": "Pré-Tape Yellow Sport 7cmx27m ",
+    "category": "Fisioterapia",
+    "subCategory": "Tape e Pré Tape",
+    "subDivision": null,
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": ["Beige", "Red", "Green"]
+  },
+  {
+    "name": "Agulha c/Guia para Dry Neeling 0,25mmx15mm",
+    "category": "Fisioterapia",
+    "subCategory": "Eletrodos e Agulhas acunpuntura",
+    "subDivision": null,
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": []
+  },
+  {
+    "name": "Agulha c/Guia para Dry Neeling 0,25mmx20mm",
+    "category": "Fisioterapia",
+    "subCategory": "Eletrodos e Agulhas acunpuntura",
+    "subDivision": null,
+    "description": "High-quality elastic bandage for support and compression.",
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
     "colorOptions": []
   }
 ]

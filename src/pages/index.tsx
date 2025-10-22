@@ -25,7 +25,7 @@ const Home: React.FC = () => {
       p.subCategory.toLowerCase() === subCategory.toLowerCase();
     const subDivMatch =
       subDivision === "all" ||
-      p.subDivision.toLowerCase() === subDivision.toLowerCase();
+      ((p.subDivision || "").toLowerCase() === (subDivision || "").toLowerCase());
     return catMatch && subCatMatch && subDivMatch;
   });
 

@@ -8,13 +8,7 @@ import {
   CardContent,
 } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "../../components/ui/select";
+import { Tooltip } from "../../components/ui/tooltip";
 
 const ProductDetails = () => {
   const router = useRouter();
@@ -34,8 +28,17 @@ const ProductDetails = () => {
   }
 
   const [selectedColor, setSelectedColor] = React.useState(
-    product.colorOptions[0] || "",
+    product.colorOptions[0] || ""
   );
+  const [tooltipOpenColor, setTooltipOpenColor] = React.useState<string | null>(null);
+
+  // When selectedColor changes, show tooltip for 1s
+  React.useEffect(() => {
+    if (!selectedColor) return;
+    setTooltipOpenColor(selectedColor);
+    const timeout = setTimeout(() => setTooltipOpenColor(null), 500);
+    return () => clearTimeout(timeout);
+  }, [selectedColor]);
 
   return (
     <div className="max-w-3xl mx-auto py-16 px-4 mt-16">
@@ -80,25 +83,40 @@ const ProductDetails = () => {
                   <label className="block text-sm font-semibold mb-1 text-gray-700">
                     Color:
                   </label>
-                  <Select
-                    value={selectedColor}
-                    onValueChange={setSelectedColor}
+                  <div
+                    className="flex flex-wrap gap-3"
                   >
-                    <SelectTrigger className="w-40">
-                      <SelectValue placeholder="Select color" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {product.colorOptions.map((color) => (
-                        <SelectItem key={color} value={color}>
-                          {color}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    {product.colorOptions.map((color) => {
+                      const isSelected = selectedColor === color;
+                      const open = tooltipOpenColor === color;
+                      return (
+                        <Tooltip key={color} content={color} open={open || undefined}>
+                          <button
+                            type="button"
+                            aria-label={color}
+                            onClick={() => setSelectedColor(color)}
+                            className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                              isSelected
+                                ? "border-blue-700 ring-2 ring-blue-300 opacity-100"
+                                : selectedColor
+                                  ? "border-gray-300 opacity-40"
+                                  : "border-gray-300 opacity-100"
+                            }`}
+                            style={{ backgroundColor: color.toLowerCase(), transition: 'opacity 0.3s' }}
+                          >
+                            {/* If color is white, add a border for visibility */}
+                            {color.toLowerCase() === "white" && (
+                              <span className="block w-6 h-6 rounded-full border border-gray-400 bg-white" />
+                            )}
+                          </button>
+                        </Tooltip>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
               <Button
-                className="mt-6 w-full md:w-auto"
+                className="mt-6 w-full md:w-auto bg-blue-700 hover:bg-blue-800 text-white font-semibold"
                 onClick={() => {
                   if (typeof window !== "undefined") {
                     window.sessionStorage.setItem(
