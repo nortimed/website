@@ -1,23 +1,42 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import HeroSection from "../components/HeroSection";
 import ProductShowcase from "../components/ProductShowcase";
 import FeaturesSection from "../components/FeaturesSection";
-import ContactForm from "../components/ContactForm";
-import Footer from "../components/Footer";
-
-import productsData from "../data/products.json";
-import { useState } from "react";
-
-const PRODUCTS_PER_PAGE = 6;
+import productsDataRaw from "../data/products.json";
+import type { Product } from "../types";
+import { SectionTransition } from "../components/SectionTransition";
 
 const Home: React.FC = () => {
+  // Scroll to products section if hash is #products on mount
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#products") {
+      setTimeout(() => {
+        const el = document.getElementById("products");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }, []);
+  // ...existing code...
   const [category, setCategory] = useState("all");
   const [subCategory, setSubCategory] = useState("all");
   const [subDivision, setSubDivision] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
+  const productsRef = useRef<HTMLDivElement>(null);
+  // ...existing code...
 
-  // Filter products by category, subCategory, subDivision
-  const filteredProducts = productsData.filter((p) => {
+  // ...existing code...
+
+  // ...existing code...
+
+  // ...existing code...
+
+  // Remove pendingContactScroll logic, now handled above
+
+  const productsData: Product[] = productsDataRaw.map((p: any) => ({
+    ...p,
+    subDivision: p.subDivision === null ? "" : p.subDivision,
+  }));
+
+  const filteredProducts = productsData.filter((p: Product) => {
     const catMatch =
       category === "all" || p.category.toLowerCase() === category.toLowerCase();
     const subCatMatch =
@@ -25,38 +44,19 @@ const Home: React.FC = () => {
       p.subCategory.toLowerCase() === subCategory.toLowerCase();
     const subDivMatch =
       subDivision === "all" ||
-      ((p.subDivision || "").toLowerCase() === (subDivision || "").toLowerCase());
+      (p.subDivision || "").toLowerCase() === (subDivision || "").toLowerCase();
     return catMatch && subCatMatch && subDivMatch;
   });
 
-  // Pagination logic
-  const totalPages =
-    Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE) || 1;
-  const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * PRODUCTS_PER_PAGE,
-    currentPage * PRODUCTS_PER_PAGE,
-  );
-
   const handleCategoryChange = (cat: string) => {
     setCategory(cat);
-    setCurrentPage(1);
   };
   const handleSubCategoryChange = (subCat: string) => {
     setSubCategory(subCat);
-    setCurrentPage(1);
   };
   const handleSubDivisionChange = (subDiv: string) => {
     setSubDivision(subDiv);
-    setCurrentPage(1);
   };
-
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  // Handler for tree dropdown filter
   const handleFilterChange = (filter: {
     category: string;
     subCategory?: string;
@@ -65,28 +65,27 @@ const Home: React.FC = () => {
     setCategory(filter.category || "all");
     setSubCategory(filter.subCategory || "all");
     setSubDivision(filter.subDivision || "all");
-    setCurrentPage(1);
   };
 
   return (
     <div>
       <HeroSection />
-      <ProductShowcase
-        products={paginatedProducts}
-        category={category}
-        subCategory={subCategory}
-        subDivision={subDivision}
-        onCategoryChange={handleCategoryChange}
-        onSubCategoryChange={handleSubCategoryChange}
-        onSubDivisionChange={handleSubDivisionChange}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-        onFilterChange={handleFilterChange}
-      />
+      <div ref={productsRef} id="products" className="mt-16 scroll-mt-16">
+        <SectionTransition animate={false}>
+          <ProductShowcase
+            products={filteredProducts}
+            category={category}
+            subCategory={subCategory}
+            subDivision={subDivision}
+            onCategoryChange={handleCategoryChange}
+            onSubCategoryChange={handleSubCategoryChange}
+            onSubDivisionChange={handleSubDivisionChange}
+            onFilterChange={handleFilterChange}
+          />
+        </SectionTransition>
+      </div>
       <FeaturesSection />
-      <ContactForm />
-      <Footer />
+      {/* Contact section removed. See /contact page. */}
     </div>
   );
 };

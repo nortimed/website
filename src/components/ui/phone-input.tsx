@@ -15,19 +15,28 @@ interface PhoneInputProps {
   onCountryChange: (country: Country) => void;
 }
 
-export const PhoneInput: React.FC<PhoneInputProps> = ({ value, onChange, country, onCountryChange }) => {
+export const PhoneInput: React.FC<PhoneInputProps> = ({
+  value,
+  onChange,
+  country,
+  onCountryChange,
+}) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
-  const filteredCountries = countryData.filter((c: Country) =>
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
-    c.dial_code.includes(search)
+  const filteredCountries = countryData.filter(
+    (c: Country) =>
+      c.name.toLowerCase().includes(search.toLowerCase()) ||
+      c.dial_code.includes(search),
   );
 
   // Close dropdown on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setOpen(false);
       }
     }
@@ -48,7 +57,13 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({ value, onChange, country
         >
           <span className="mr-1">{country.flag}</span>
           <span>{country.dial_code}</span>
-          <svg className="ml-1 w-3 h-3 text-gray-500" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.293l3.71-3.06a.75.75 0 1 1 .96 1.15l-4.25 3.5a.75.75 0 0 1-.96 0l-4.25-3.5a.75.75 0 0 1 .02-1.06z"/></svg>
+          <svg
+            className="ml-1 w-3 h-3 text-gray-500"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.293l3.71-3.06a.75.75 0 1 1 .96 1.15l-4.25 3.5a.75.75 0 0 1-.96 0l-4.25-3.5a.75.75 0 0 1 .02-1.06z" />
+          </svg>
         </button>
         {open && (
           <div className="absolute left-0 z-10 mt-1 w-56 max-h-64 overflow-auto bg-white border border-gray-200 rounded shadow-lg">
@@ -57,7 +72,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({ value, onChange, country
               className="w-full px-2 py-1 border-b border-gray-200 text-sm focus:outline-none"
               placeholder="Search country or code"
               value={search}
-              onChange={e => setSearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
               autoFocus
             />
             <ul className="max-h-48 overflow-auto" role="listbox">
@@ -86,7 +101,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({ value, onChange, country
         type="tel"
         className="flex-1 border border-l-0 border-gray-300 rounded-r px-3 h-10 focus:outline-none focus:ring-1 focus:ring-blue-400"
         value={value}
-        onChange={e => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
         placeholder="Phone number"
       />
     </div>

@@ -12,7 +12,7 @@ export default defineConfig([
       "coverage/",
       "public/",
       "src/components/ui/",
-      "next-env.d.ts"
+      "next-env.d.ts",
     ],
   },
   {

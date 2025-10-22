@@ -28,9 +28,11 @@ const ProductDetails = () => {
   }
 
   const [selectedColor, setSelectedColor] = React.useState(
-    product.colorOptions[0] || ""
+    product.colorOptions[0] || "",
   );
-  const [tooltipOpenColor, setTooltipOpenColor] = React.useState<string | null>(null);
+  const [tooltipOpenColor, setTooltipOpenColor] = React.useState<string | null>(
+    null,
+  );
 
   // When selectedColor changes, show tooltip for 1s
   React.useEffect(() => {
@@ -83,14 +85,16 @@ const ProductDetails = () => {
                   <label className="block text-sm font-semibold mb-1 text-gray-700">
                     Color:
                   </label>
-                  <div
-                    className="flex flex-wrap gap-3"
-                  >
+                  <div className="flex flex-wrap gap-3">
                     {product.colorOptions.map((color) => {
                       const isSelected = selectedColor === color;
                       const open = tooltipOpenColor === color;
                       return (
-                        <Tooltip key={color} content={color} open={open || undefined}>
+                        <Tooltip
+                          key={color}
+                          content={color}
+                          open={open || undefined}
+                        >
                           <button
                             type="button"
                             aria-label={color}
@@ -102,7 +106,10 @@ const ProductDetails = () => {
                                   ? "border-gray-300 opacity-40"
                                   : "border-gray-300 opacity-100"
                             }`}
-                            style={{ backgroundColor: color.toLowerCase(), transition: 'opacity 0.3s' }}
+                            style={{
+                              backgroundColor: color.toLowerCase(),
+                              transition: "opacity 0.3s",
+                            }}
                           >
                             {/* If color is white, add a border for visibility */}
                             {color.toLowerCase() === "white" && (

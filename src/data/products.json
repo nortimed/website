@@ -237,11 +237,7 @@
       "/images/elastic-bandage-1.jpg",
       "/images/elastic-bandage-2.jpg"
     ],
-    "colorOptions": [
-      "Black",
-      "Red",
-      "Beige"
-    ]
+    "colorOptions": ["Black", "Red", "Beige"]
   },
   {
     "name": "KinésioTape YellowSport 7,5mx5m",
@@ -253,11 +249,7 @@
       "/images/elastic-bandage-1.jpg",
       "/images/elastic-bandage-2.jpg"
     ],
-    "colorOptions": [
-      "Black",
-      "Red",
-      "Beige"
-    ]
+    "colorOptions": ["Black", "Red", "Beige"]
   },
   {
     "name": "Tape Desportivo Yellow Sport  2,5cmx9,1m",

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Input } from "./ui/input";
+import { EmailInput } from "./ui/email-input";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 
@@ -9,6 +10,7 @@ const ContactForm: React.FC = () => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const MESSAGE_MAX = 500;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,6 +19,10 @@ const ContactForm: React.FC = () => {
 
     if (!name || !email || !message) {
       setError("All fields are required.");
+      return;
+    }
+    if (message.length > MESSAGE_MAX) {
+      setError(`Message must be at most ${MESSAGE_MAX} characters.`);
       return;
     }
 
@@ -31,9 +37,6 @@ const ContactForm: React.FC = () => {
   return (
     <section id="contact" className="py-16 px-4 bg-white">
       <div className="max-w-lg mx-auto bg-gray-50 rounded-xl shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-900">
-          Contact Us
-        </h2>
         {error && <p className="text-red-600 text-center mb-2">{error}</p>}
         {success && (
           <p className="text-green-600 text-center mb-2">
@@ -63,13 +66,7 @@ const ContactForm: React.FC = () => {
             >
               Email
             </label>
-            <Input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <EmailInput id="email" value={email} onChange={setEmail} required />
           </div>
           <div>
             <label
@@ -81,9 +78,17 @@ const ContactForm: React.FC = () => {
             <Textarea
               id="message"
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value.length <= MESSAGE_MAX) {
+                  setMessage(e.target.value);
+                }
+              }}
+              maxLength={MESSAGE_MAX}
               required
             />
+            <div className="text-xs text-gray-500 text-right mt-1">
+              {message.length}/{MESSAGE_MAX}
+            </div>
           </div>
           <Button type="submit" className="w-full py-3 font-semibold">
             Send Message
