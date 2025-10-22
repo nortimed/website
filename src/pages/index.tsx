@@ -1,35 +1,40 @@
-import React from 'react';
-import HeroSection from '../components/HeroSection';
-import ProductShowcase from '../components/ProductShowcase';
-import FeaturesSection from '../components/FeaturesSection';
-import ContactForm from '../components/ContactForm';
-import Footer from '../components/Footer';
+import React from "react";
+import HeroSection from "../components/HeroSection";
+import ProductShowcase from "../components/ProductShowcase";
+import FeaturesSection from "../components/FeaturesSection";
+import ContactForm from "../components/ContactForm";
+import Footer from "../components/Footer";
 
-
-import productsData from '../data/products.json';
-import { useState } from 'react';
+import productsData from "../data/products.json";
+import { useState } from "react";
 
 const PRODUCTS_PER_PAGE = 6;
 
 const Home: React.FC = () => {
-  const [category, setCategory] = useState('all');
-  const [subCategory, setSubCategory] = useState('all');
-  const [subDivision, setSubDivision] = useState('all');
+  const [category, setCategory] = useState("all");
+  const [subCategory, setSubCategory] = useState("all");
+  const [subDivision, setSubDivision] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
 
   // Filter products by category, subCategory, subDivision
   const filteredProducts = productsData.filter((p) => {
-    const catMatch = category === 'all' || p.category.toLowerCase() === category.toLowerCase();
-    const subCatMatch = subCategory === 'all' || p.subCategory.toLowerCase() === subCategory.toLowerCase();
-    const subDivMatch = subDivision === 'all' || p.subDivision.toLowerCase() === subDivision.toLowerCase();
+    const catMatch =
+      category === "all" || p.category.toLowerCase() === category.toLowerCase();
+    const subCatMatch =
+      subCategory === "all" ||
+      p.subCategory.toLowerCase() === subCategory.toLowerCase();
+    const subDivMatch =
+      subDivision === "all" ||
+      p.subDivision.toLowerCase() === subDivision.toLowerCase();
     return catMatch && subCatMatch && subDivMatch;
   });
 
   // Pagination logic
-  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE) || 1;
+  const totalPages =
+    Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE) || 1;
   const paginatedProducts = filteredProducts.slice(
     (currentPage - 1) * PRODUCTS_PER_PAGE,
-    currentPage * PRODUCTS_PER_PAGE
+    currentPage * PRODUCTS_PER_PAGE,
   );
 
   const handleCategoryChange = (cat: string) => {
@@ -52,10 +57,14 @@ const Home: React.FC = () => {
   };
 
   // Handler for tree dropdown filter
-  const handleFilterChange = (filter: { category: string; subCategory?: string; subDivision?: string }) => {
-    setCategory(filter.category || 'all');
-    setSubCategory(filter.subCategory || 'all');
-    setSubDivision(filter.subDivision || 'all');
+  const handleFilterChange = (filter: {
+    category: string;
+    subCategory?: string;
+    subDivision?: string;
+  }) => {
+    setCategory(filter.category || "all");
+    setSubCategory(filter.subCategory || "all");
+    setSubDivision(filter.subDivision || "all");
     setCurrentPage(1);
   };
 

@@ -15,17 +15,20 @@ Welcome to the Nortimed Landing Page project! This project is built using Next.j
 To get started with the project, follow these steps:
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/yourusername/nortimed-landing-page.git
    cd nortimed-landing-page
    ```
 
 2. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 3. **Run the development server**:
+
    ```bash
    npm run dev
    ```

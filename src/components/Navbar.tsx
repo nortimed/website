@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { Button } from './ui/button';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { Button } from "./ui/button";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
-  const isHome = router.pathname === '/';
+  const isHome = router.pathname === "/";
   const [show, setShow] = useState(!isHome);
 
   useEffect(() => {
@@ -20,14 +20,16 @@ const Navbar: React.FC = () => {
         setShow(false);
       }
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [isHome]);
 
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        show ? 'bg-white/90 shadow-md backdrop-blur-md' : 'pointer-events-none opacity-0'
+        show
+          ? "bg-white/90 shadow-md backdrop-blur-md"
+          : "pointer-events-none opacity-0"
       }`}
     >
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -36,10 +38,14 @@ const Navbar: React.FC = () => {
         </Link>
         <div className="flex gap-4 items-center">
           <Link href="/#products">
-            <Button variant="ghost" className="font-medium">Products</Button>
+            <Button variant="ghost" className="font-medium">
+              Products
+            </Button>
           </Link>
           <Link href="/#contact">
-            <Button variant="ghost" className="font-medium">Contact</Button>
+            <Button variant="ghost" className="font-medium">
+              Contact
+            </Button>
           </Link>
         </div>
       </div>

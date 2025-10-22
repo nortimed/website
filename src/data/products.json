@@ -5,26 +5,59 @@
     "subCategory": "Ligaduras",
     "subDivision": "Ligaduras coesivas",
     "description": "High-quality elastic bandage for support and compression.",
-    "images": ["/images/elastic-bandage-1.jpg", "/images/elastic-bandage-2.jpg"],
-    "colorOptions": ["Blue", "Red", "Beige", "Black", "Yellow", "Green", "White"]
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": [
+      "Blue",
+      "Red",
+      "Beige",
+      "Black",
+      "Yellow",
+      "Green",
+      "White"
+    ]
   },
-    {
+  {
     "name": "Ligadura coesiva Yellow Sport 7,5cmx4,5m",
     "category": "Fisioterapia",
     "subCategory": "Ligaduras",
     "subDivision": "Ligaduras coesivas",
     "description": "High-quality elastic bandage for support and compression.",
-    "images": ["/images/elastic-bandage-1.jpg", "/images/elastic-bandage-2.jpg"],
-    "colorOptions": ["Blue", "Red", "Beige", "Black", "Yellow", "Green", "White"]
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": [
+      "Blue",
+      "Red",
+      "Beige",
+      "Black",
+      "Yellow",
+      "Green",
+      "White"
+    ]
   },
-    {
+  {
     "name": "Ligadura coesiva Yellow Sport 10cmx4,5m",
     "category": "Fisioterapia",
     "subCategory": "Ligaduras",
     "subDivision": "Ligaduras coesivas",
     "description": "High-quality elastic bandage for support and compression.",
-    "images": ["/images/elastic-bandage-1.jpg", "/images/elastic-bandage-2.jpg"],
-    "colorOptions": ["Blue", "Red", "Beige", "Black", "Yellow", "Green", "White"]
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
+    "colorOptions": [
+      "Blue",
+      "Red",
+      "Beige",
+      "Black",
+      "Yellow",
+      "Green",
+      "White"
+    ]
   },
   {
     "name": "Ligadura coesiva de suporte 8cmx4m ",
@@ -32,16 +65,22 @@
     "subCategory": "Ligaduras",
     "subDivision": "Ligaduras coesivas",
     "description": "High-quality elastic bandage for support and compression.",
-    "images": ["/images/elastic-bandage-1.jpg", "/images/elastic-bandage-2.jpg"],
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
     "colorOptions": []
   },
-    {
+  {
     "name": "Ligadura coesiva de suporte 10cmx4m ",
     "category": "Fisioterapia",
     "subCategory": "Ligaduras",
     "subDivision": "Ligaduras coesivas",
     "description": "High-quality elastic bandage for support and compression.",
-    "images": ["/images/elastic-bandage-1.jpg", "/images/elastic-bandage-2.jpg"],
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
     "colorOptions": []
   },
   {
@@ -50,7 +89,10 @@
     "subCategory": "Bandages",
     "subDivision": "Elastic Bandages",
     "description": "High-quality elastic bandage for support and compression.",
-    "images": ["/images/elastic-bandage-1.jpg", "/images/elastic-bandage-2.jpg"],
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
     "colorOptions": ["Beige", "White", "Black"]
   },
   {
@@ -59,7 +101,10 @@
     "subCategory": "Bandages",
     "subDivision": "Elastic Bandages",
     "description": "High-quality elastic bandage for support and compression.",
-    "images": ["/images/elastic-bandage-1.jpg", "/images/elastic-bandage-2.jpg"],
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
     "colorOptions": ["Beige", "White", "Black"]
   },
   {
@@ -68,7 +113,10 @@
     "subCategory": "Bandages",
     "subDivision": "Elastic Bandages",
     "description": "High-quality elastic bandage for support and compression.",
-    "images": ["/images/elastic-bandage-1.jpg", "/images/elastic-bandage-2.jpg"],
+    "images": [
+      "/images/elastic-bandage-1.jpg",
+      "/images/elastic-bandage-2.jpg"
+    ],
     "colorOptions": ["Beige", "White", "Black"]
   },
   {

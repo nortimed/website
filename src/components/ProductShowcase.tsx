@@ -1,20 +1,23 @@
-import React from 'react';
-import { Product } from '../types';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './ui/card';
-import { Button } from './ui/button';
-import Link from 'next/link';
+import React from "react";
+import { Product } from "../types";
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from './ui/select';
-import ProductTreeModal from './ProductTreeModal';
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "./ui/card";
+import { Button } from "./ui/button";
+import Link from "next/link";
+import ProductTreeModal from "./ProductTreeModal";
 
 interface ProductShowcaseProps {
   products: Product[];
-  onFilterChange: (filter: { category: string; subCategory?: string; subDivision?: string }) => void;
+  onFilterChange: (filter: {
+    category: string;
+    subCategory?: string;
+    subDivision?: string;
+  }) => void;
   category: string;
   subCategory?: string;
   subDivision?: string;
@@ -32,17 +35,13 @@ const ProductShowcase: React.FC<ProductShowcaseProps> = ({
   currentPage,
   totalPages,
   onPageChange,
-  category,
-  subCategory,
-  subDivision,
-  onCategoryChange,
-  onSubCategoryChange,
-  onSubDivisionChange,
 }) => {
   return (
     <section id="products" className="py-16 px-4 bg-white">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">Our Products</h2>
+        <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
+          Our Products
+        </h2>
         {/* Modal-based tree filter for category/sub-category/sub-division */}
         <div className="flex justify-start mb-6">
           <ProductTreeModal onSelect={onFilterChange} />
@@ -60,12 +59,22 @@ const ProductShowcase: React.FC<ProductShowcaseProps> = ({
                 <CardDescription>{product.category}</CardDescription>
               </CardHeader>
               <CardContent className="flex-1 flex flex-col justify-between">
-                <p className="text-gray-600 text-sm mb-2 flex-1">{product.description}</p>
+                <p className="text-gray-600 text-sm mb-2 flex-1">
+                  {product.description}
+                </p>
                 {product.colorOptions.length > 0 && (
-                  <div className="text-xs text-gray-500 mb-2">Colors: {product.colorOptions.join(', ')}</div>
+                  <div className="text-xs text-gray-500 mb-2">
+                    Colors: {product.colorOptions.join(", ")}
+                  </div>
                 )}
-                <Button asChild className="w-full mt-2 bg-blue-700 hover:bg-blue-800 text-white" variant="default">
-                  <Link href={`/product/${encodeURIComponent(product.name.toLowerCase().replace(/\s+/g, '-'))}`}>
+                <Button
+                  asChild
+                  className="w-full mt-2 bg-blue-700 hover:bg-blue-800 text-white"
+                  variant="default"
+                >
+                  <Link
+                    href={`/product/${encodeURIComponent(product.name.toLowerCase().replace(/\s+/g, "-"))}`}
+                  >
                     View Details
                   </Link>
                 </Button>
@@ -81,7 +90,9 @@ const ProductShowcase: React.FC<ProductShowcaseProps> = ({
           >
             Previous
           </Button>
-          <span className="text-gray-700 font-semibold">{currentPage} of {totalPages}</span>
+          <span className="text-gray-700 font-semibold">
+            {currentPage} of {totalPages}
+          </span>
           <Button
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
