@@ -32,7 +32,7 @@ const ProductDetails = () => {
   const [selectedColor, setSelectedColor] = React.useState(product.colorOptions[0] || '');
 
   return (
-    <div className="max-w-3xl mx-auto py-16 px-4">
+  <div className="max-w-3xl mx-auto py-16 px-4 mt-16">
       <Card className="overflow-hidden">
         <CardHeader>
           <CardTitle className="text-3xl mb-2 text-blue-800">{product.name}</CardTitle>

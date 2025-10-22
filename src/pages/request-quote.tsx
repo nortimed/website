@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import productsData from '../data/products.json';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
+import { Trash2 } from 'lucide-react';
 import {
   Select,
   SelectTrigger,
@@ -162,7 +163,7 @@ const RequestQuote: React.FC = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-16 px-4">
+  <div className="max-w-2xl mx-auto py-16 px-4 mt-16">
       <h1 className="text-3xl font-bold mb-8 text-center">Request Product Quote</h1>
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -342,8 +343,16 @@ const RequestQuote: React.FC = () => {
                       })()}
                     </div>
                   </div>
-                  <Button type="button" variant="destructive" onClick={() => handleRemoveProduct(idx)}>
-                    Remove
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => handleRemoveProduct(idx)}
+                    className="p-2 rounded-full hover:bg-red-50 group"
+                    aria-label="Remove product"
+                  >
+                    <Trash2
+                      className="w-5 h-5 text-gray-400 group-hover:text-red-600 md:text-gray-400 md:group-hover:text-red-600 sm:text-red-600"
+                    />
                   </Button>
                 </Card>
               );

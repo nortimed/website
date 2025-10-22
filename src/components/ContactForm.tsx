@@ -30,7 +30,7 @@ const ContactForm: React.FC = () => {
     };
 
     return (
-        <section className="py-16 px-4 bg-white">
+        <section id="contact" className="py-16 px-4 bg-white">
             <div className="max-w-lg mx-auto bg-gray-50 rounded-xl shadow-lg p-8">
                 <h2 className="text-2xl font-bold text-center mb-6 text-gray-900">Contact Us</h2>
                 {error && <p className="text-red-600 text-center mb-2">{error}</p>}

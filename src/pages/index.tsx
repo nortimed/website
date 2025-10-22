@@ -51,6 +51,14 @@ const Home: React.FC = () => {
     }
   };
 
+  // Handler for tree dropdown filter
+  const handleFilterChange = (filter: { category: string; subCategory?: string; subDivision?: string }) => {
+    setCategory(filter.category || 'all');
+    setSubCategory(filter.subCategory || 'all');
+    setSubDivision(filter.subDivision || 'all');
+    setCurrentPage(1);
+  };
+
   return (
     <div>
       <HeroSection />
@@ -65,6 +73,7 @@ const Home: React.FC = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}
+        onFilterChange={handleFilterChange}
       />
       <FeaturesSection />
       <ContactForm />

@@ -32,6 +32,3 @@ coverage/
 # Misc
 *.swp
 *.swo
-
-# shadcn/ui generated config
-components.json

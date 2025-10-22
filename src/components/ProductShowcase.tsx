@@ -10,7 +10,7 @@ import {
   SelectContent,
   SelectItem,
 } from './ui/select';
-import ProductTreeDropdown from './ProductTreeDropdown';
+import ProductTreeModal from './ProductTreeModal';
 
 interface ProductShowcaseProps {
   products: Product[];
@@ -43,9 +43,9 @@ const ProductShowcase: React.FC<ProductShowcaseProps> = ({
     <section id="products" className="py-16 px-4 bg-white">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">Our Products</h2>
-        {/* Nested dropdown menu for category/sub-category/sub-division tree */}
+        {/* Modal-based tree filter for category/sub-category/sub-division */}
         <div className="flex justify-start mb-6">
-          <ProductTreeDropdown onSelect={onFilterChange} />
+          <ProductTreeModal onSelect={onFilterChange} />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {products.map((product) => (
@@ -64,7 +64,7 @@ const ProductShowcase: React.FC<ProductShowcaseProps> = ({
                 {product.colorOptions.length > 0 && (
                   <div className="text-xs text-gray-500 mb-2">Colors: {product.colorOptions.join(', ')}</div>
                 )}
-                <Button asChild className="w-full mt-2" variant="default">
+                <Button asChild className="w-full mt-2 bg-blue-700 hover:bg-blue-800 text-white" variant="default">
                   <Link href={`/product/${encodeURIComponent(product.name.toLowerCase().replace(/\s+/g, '-'))}`}>
                     View Details
                   </Link>
