@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 
 const HeroSection: React.FC = () => {
   return (
-    <section className="relative bg-gradient-to-br from-blue-100 via-white to-green-100 py-20 px-4 flex items-center justify-center min-h-[60vh]">
+    <section className="relative bg-gradient-to-br from-blue-100 via-white to-green-100 py-20 px-4 flex items-center justify-center min-h-screen">
       <div className="max-w-2xl text-center">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 drop-shadow-lg">
           Welcome to <span className="text-blue-600">Nortimed</span>

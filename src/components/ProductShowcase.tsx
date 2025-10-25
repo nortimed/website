@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ProductSkeleton from "./ProductSkeleton";
-import { Product } from "../types";
+import productsDataRaw from "../data/products.json";
+import type { Product } from "../types";
 import {
   Card,
   CardHeader,
@@ -11,34 +12,43 @@ import {
 } from "./ui/card";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import ProductTreeModal from "./ProductTreeModal";
+import ProductCategoryTreeModal from "./ProductCategoryTreeModal";
+import { Input } from "./ui/input";
+import { Search as SearchIcon } from "lucide-react";
 
 interface ProductShowcaseProps {
-  products: Product[];
-  onFilterChange: (filter: {
-    category: string;
-    subCategory?: string;
-    subDivision?: string;
-  }) => void;
-  category: string;
-  subCategory?: string;
-  subDivision?: string;
-  onCategoryChange: (category: string) => void;
-  onSubCategoryChange: (subCategory: string) => void;
-  onSubDivisionChange: (subDivision: string) => void;
+  onFilterModalOpenChange?: (open: boolean) => void;
 }
 
 const ProductShowcase: React.FC<ProductShowcaseProps> = ({
-  products,
-  onFilterChange,
+  onFilterModalOpenChange,
 }) => {
+  // Load and preprocess product data
+  const DEFAULT_IMAGE = "/favicon.ico"; // You can replace this with a better placeholder
+  const products: Product[] = (productsDataRaw as any[]).map((p: any) => {
+    let images = p.images;
+    if (!images || !Array.isArray(images) || images.length === 0) {
+      images = [DEFAULT_IMAGE];
+    }
+    return {
+      ...p,
+      images,
+      subDivision: p.subDivision === null ? "" : p.subDivision,
+    };
+  });
+  // Local filter state
+  const [category, setCategory] = useState<string>("all");
+  const [subCategory, setSubCategory] = useState<string>("all");
+  const [subDivision, setSubDivision] = useState<string>("all");
+  const [nameFilter, setNameFilter] = useState<string>("");
   // Removed filterLoading for instant product animation
   const [filterBg, setFilterBg] = useState(false);
   // Filtering state for skeleton transition
   const [filtering, setFiltering] = useState(false);
   const overlapSentinelRef = useRef<HTMLDivElement | null>(null);
   const stickyRef = useRef<HTMLDivElement | null>(null);
-  const prevProductsRef = useRef(products);
+  // Track previous visible products for animation
+  const prevVisibleProductsRef = useRef<string>("");
 
   // Show sticky background when filter overlaps the first row (sentinel)
   useEffect(() => {
@@ -58,27 +68,40 @@ const ProductShowcase: React.FC<ProductShowcaseProps> = ({
     return () => observer.disconnect();
   }, []);
 
-  // Scroll to top when filter changes
-  useEffect(() => {
-    const prevProducts = prevProductsRef.current;
-    if (prevProducts !== products) {
-      // Scroll to the top of the #products section
-      const productsSection = document.getElementById("products");
-      if (productsSection) {
-        productsSection.scrollIntoView({ behavior: "auto", block: "start" });
-      }
-      // Start filtering state for skeleton transition
-      setFiltering(true);
-      setTimeout(() => setFiltering(false), 900); // adjust duration as needed
-    }
-    prevProductsRef.current = products;
-  }, [products]);
-
   // CODE TOGGLE: Set to true to IGNORE image load and always show product card (for dev without images)
   const IGNORE_IMAGE_LOAD = true; // set to false for real image loading behavior
   // Track loading state for each product image
   const [loaded, setLoaded] = useState<{ [name: string]: boolean }>({});
-  const visibleProducts = products;
+  const visibleProducts = React.useMemo(() => {
+    return products.filter((p: Product) => {
+      const catMatch =
+        category === "all" ||
+        p.category.toLowerCase() === category.toLowerCase();
+      const subCatMatch =
+        subCategory === "all" ||
+        p.subCategory.toLowerCase() === subCategory.toLowerCase();
+      const subDivMatch =
+        subDivision === "all" ||
+        (p.subDivision || "").toLowerCase() ===
+          (subDivision || "").toLowerCase();
+      const nameMatch =
+        !nameFilter.trim() ||
+        p.name.toLowerCase().includes(nameFilter.trim().toLowerCase());
+      return catMatch && subCatMatch && subDivMatch && nameMatch;
+    });
+  }, [products, category, subCategory, subDivision, nameFilter]);
+
+  // Filtering state for skeleton transition (no scroll)
+  useEffect(() => {
+    const visibleProductsHash = JSON.stringify(
+      visibleProducts.map((p) => p.name),
+    );
+    if (prevVisibleProductsRef.current !== visibleProductsHash) {
+      setFiltering(true);
+      setTimeout(() => setFiltering(false), 900); // adjust duration as needed
+    }
+    prevVisibleProductsRef.current = visibleProductsHash;
+  }, [visibleProducts]);
 
   return (
     <section id="products" className="py-16 px-4 bg-white">
@@ -89,13 +112,42 @@ const ProductShowcase: React.FC<ProductShowcaseProps> = ({
         <div ref={overlapSentinelRef} style={{ height: 0 }} />
         <div
           ref={stickyRef}
-          className={`flex justify-start mb-6 sticky z-40 transition-all duration-300 py-3 w-full top-16 px-4
-            ${filterBg ? "bg-white shadow-2xl rounded-xl" : "bg-transparent shadow-none"}`}
+          className="flex flex-col sm:flex-row justify-start mb-6 sticky z-40 transition-all duration-300 py-3 w-full top-16 pl-0 bg-transparent overflow-x-auto sm:overflow-x-visible"
         >
-          <ProductTreeModal onSelect={onFilterChange} />
+          <div className="flex flex-row items-stretch w-auto gap-x-3">
+            <div className="shrink-0">
+              <ProductCategoryTreeModal
+                onSelect={({
+                  category: cat,
+                  subCategory: subCat,
+                  subDivision: subDiv,
+                }) => {
+                  setCategory(cat || "all");
+                  setSubCategory(subCat || "all");
+                  setSubDivision(subDiv || "all");
+                }}
+                onOpenChange={onFilterModalOpenChange}
+                triggerClassName="w-[260px] max-w-xs h-12 rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150 flex items-center px-3 focus:!border-blue-500 focus:!ring-0 active:!border-blue-500 justify-between"
+                popoverContentClassName="border border-gray-300 shadow-md"
+              />
+            </div>
+            <div className="relative w-[260px] max-w-xs h-12">
+              <div className="rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150 flex items-center px-3 h-12 focus-within:border-blue-500">
+                <Input
+                  type="text"
+                  placeholder="Search by product name..."
+                  value={nameFilter}
+                  onChange={(e) => setNameFilter(e.target.value)}
+                  className="pr-10 bg-transparent !border-none !ring-0 shadow-none focus:!border-none focus:!ring-0 focus:outline-none active:!border-none h-10"
+                />
+                <span className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                  <SearchIcon className="w-5 h-5" />
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {/* CODE TOGGLE: Remove this block for production. Set SHOW_SKELETON_LOADING above. */}
           <AnimatePresence mode="wait">
             {filtering
               ? // Show skeletons with breath animation while filtering
@@ -118,7 +170,7 @@ const ProductShowcase: React.FC<ProductShowcaseProps> = ({
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3, delay: idx * 0.04 }}
                   >
-                    <Card className="flex flex-col h-full">
+                    <Card className="flex flex-col h-full rounded-lg shadow-lg border border-gray-200">
                       <img
                         src={product.images[0]}
                         alt={product.name}
@@ -126,6 +178,14 @@ const ProductShowcase: React.FC<ProductShowcaseProps> = ({
                         onLoad={() =>
                           setLoaded((l) => ({ ...l, [product.name]: true }))
                         }
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (
+                            !target.src.endsWith("/images/product/image.png")
+                          ) {
+                            target.src = "/images/product/image.png";
+                          }
+                        }}
                         style={{
                           display:
                             loaded[product.name] || IGNORE_IMAGE_LOAD

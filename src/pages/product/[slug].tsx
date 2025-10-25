@@ -1,4 +1,5 @@
 import React from "react";
+import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import products from "../../data/products.json";
 import {
@@ -43,106 +44,137 @@ const ProductDetails = () => {
   }, [selectedColor]);
 
   return (
-    <div className="max-w-3xl mx-auto py-16 px-4 mt-16">
-      <Card className="overflow-hidden">
-        <CardHeader>
-          <CardTitle className="text-3xl mb-2 text-blue-800">
-            {product.name}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col md:flex-row gap-10">
-            <div className="flex-1 flex flex-col items-center">
-              <img
-                src={product.images[0]}
-                alt={product.name}
-                className="w-full max-w-xs h-64 object-cover rounded-lg mb-4 border border-gray-200 shadow"
-              />
-              {/* Carousel for more images can be added here */}
-            </div>
-            <div className="flex-1 flex flex-col justify-center">
-              <p className="mb-4 text-gray-700 text-lg leading-relaxed">
-                {product.description}
-              </p>
-              <div className="mb-2 text-sm text-gray-500">
-                <span className="font-semibold">Category:</span>{" "}
-                {product.category}
-              </div>
-              {product.subCategory && (
-                <div className="mb-2 text-sm text-gray-500">
-                  <span className="font-semibold">Sub-category:</span>{" "}
-                  {product.subCategory}
+    <div className="flex flex-col min-h-screen">
+      <main className="flex-1 flex items-center justify-center">
+        <div className="max-w-3xl w-full mx-auto py-16 px-4 mt-16">
+          <Card className="overflow-hidden rounded-lg shadow-lg border border-gray-200">
+            <CardHeader>
+              <CardTitle className="text-3xl mb-2 text-blue-800">
+                {product.name}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col md:flex-row gap-10">
+                <div className="flex-1 flex flex-col items-center">
+                  <img
+                    src={product.images[0]}
+                    alt={product.name}
+                    className="w-full max-w-xs h-64 object-cover rounded-lg mb-4 border border-gray-200 shadow"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (!target.src.endsWith("/images/product/image.png")) {
+                        target.src = "/images/product/image.png";
+                      }
+                    }}
+                  />
+                  {/* Carousel for more images can be added here */}
                 </div>
-              )}
-              {product.subDivision && (
-                <div className="mb-2 text-sm text-gray-500">
-                  <span className="font-semibold">Sub-division:</span>{" "}
-                  {product.subDivision}
-                </div>
-              )}
-              {product.colorOptions.length > 0 && (
-                <div className="mb-4">
-                  <label className="block text-sm font-semibold mb-1 text-gray-700">
-                    Color:
-                  </label>
-                  <div className="flex flex-wrap gap-3">
-                    {product.colorOptions.map((color) => {
-                      const isSelected = selectedColor === color;
-                      const open = tooltipOpenColor === color;
-                      return (
-                        <Tooltip
-                          key={color}
-                          content={color}
-                          open={open || undefined}
-                        >
-                          <button
-                            type="button"
-                            aria-label={color}
-                            onClick={() => setSelectedColor(color)}
-                            className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-blue-400 ${
-                              isSelected
-                                ? "border-blue-700 ring-2 ring-blue-300 opacity-100"
-                                : selectedColor
-                                  ? "border-gray-300 opacity-40"
-                                  : "border-gray-300 opacity-100"
-                            }`}
-                            style={{
-                              backgroundColor: color.toLowerCase(),
-                              transition: "opacity 0.3s",
-                            }}
-                          >
-                            {/* If color is white, add a border for visibility */}
-                            {color.toLowerCase() === "white" && (
-                              <span className="block w-6 h-6 rounded-full border border-gray-400 bg-white" />
-                            )}
-                          </button>
-                        </Tooltip>
-                      );
-                    })}
+                <div className="flex-1 flex flex-col justify-center">
+                  <p className="mb-4 text-gray-700 text-lg leading-relaxed">
+                    {product.description}
+                  </p>
+                  <div className="mb-2 text-sm text-gray-500">
+                    <span className="font-semibold">Category:</span>{" "}
+                    {product.category}
                   </div>
+                  {product.subCategory && (
+                    <div className="mb-2 text-sm text-gray-500">
+                      <span className="font-semibold">Sub-category:</span>{" "}
+                      {product.subCategory}
+                    </div>
+                  )}
+                  {product.subDivision && (
+                    <div className="mb-2 text-sm text-gray-500">
+                      <span className="font-semibold">Sub-division:</span>{" "}
+                      {product.subDivision}
+                    </div>
+                  )}
+                  {product.colorOptions.length > 0 && (
+                    <div className="mb-4">
+                      <label className="block text-sm font-semibold mb-1 text-gray-700">
+                        Color:
+                      </label>
+                      <div className="flex flex-wrap gap-3">
+                        {product.colorOptions.map((color) => {
+                          const isSelected = selectedColor === color;
+                          const open = tooltipOpenColor === color;
+                          return (
+                            <Tooltip
+                              key={color}
+                              content={color}
+                              open={open || undefined}
+                            >
+                              <button
+                                type="button"
+                                aria-label={color}
+                                onClick={() => setSelectedColor(color)}
+                                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all outline-none ${
+                                  isSelected
+                                    ? "border-blue-600 shadow-[0_0_0_4px_rgba(0,0,0,0.18)] opacity-100"
+                                    : selectedColor
+                                      ? "border-gray-300 opacity-40"
+                                      : "border-gray-300 opacity-100"
+                                }`}
+                                style={{
+                                  backgroundColor: color.toLowerCase(),
+                                  transition: "opacity 0.3s",
+                                }}
+                              >
+                                {/* If color is white, add a border for visibility */}
+                                {color.toLowerCase() === "white" && (
+                                  <span className="block w-6 h-6 rounded-full border border-gray-400 bg-white" />
+                                )}
+                              </button>
+                            </Tooltip>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                  <Button
+                    className="mt-6 w-full md:w-auto bg-blue-700 hover:bg-blue-800 text-white font-semibold"
+                    onClick={() => {
+                      if (typeof window !== "undefined") {
+                        window.sessionStorage.setItem(
+                          "quoteProduct",
+                          JSON.stringify({
+                            product: product.name,
+                            color: selectedColor || "",
+                          }),
+                        );
+                        // Add to cookie cart
+                        let cart: any[] = [];
+                        try {
+                          cart = JSON.parse(Cookies.get("quoteCart") || "[]");
+                        } catch {}
+                        // Avoid duplicates (same product+color)
+                        if (
+                          !cart.some(
+                            (item) =>
+                              item.product === product.name &&
+                              item.color === (selectedColor || ""),
+                          )
+                        ) {
+                          cart.push({
+                            product: product.name,
+                            color: selectedColor || "",
+                          });
+                          Cookies.set("quoteCart", JSON.stringify(cart), {
+                            expires: 7,
+                          });
+                        }
+                      }
+                      router.push("/request-quote");
+                    }}
+                  >
+                    Request Product Quote
+                  </Button>
                 </div>
-              )}
-              <Button
-                className="mt-6 w-full md:w-auto bg-blue-700 hover:bg-blue-800 text-white font-semibold"
-                onClick={() => {
-                  if (typeof window !== "undefined") {
-                    window.sessionStorage.setItem(
-                      "quoteProduct",
-                      JSON.stringify({
-                        product: product.name,
-                        color: selectedColor || "",
-                      }),
-                    );
-                  }
-                  router.push("/request-quote");
-                }}
-              >
-                Request Product Quote
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
     </div>
   );
 };

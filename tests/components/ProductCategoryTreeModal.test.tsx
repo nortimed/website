@@ -1,6 +1,5 @@
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import ProductTreeModal from "../../src/components/ProductTreeModal";
+import ProductCategoryTreeModal from "../../src/components/ProductCategoryTreeModal";
 
 const mockProducts = [
   {
@@ -38,20 +37,20 @@ function openPopover() {
   fireEvent.click(screen.getByRole("combobox"));
 }
 
-describe("ProductTreeModal", () => {
+describe("ProductCategoryTreeModal", () => {
   it("renders trigger button", () => {
-    render(<ProductTreeModal />);
+    render(<ProductCategoryTreeModal />);
     expect(screen.getByRole("combobox")).toBeInTheDocument();
   });
 
   it("opens popover on click", () => {
-    render(<ProductTreeModal />);
+    render(<ProductCategoryTreeModal />);
     openPopover();
     expect(screen.getByText(/Select category/i)).toBeInTheDocument();
   });
 
   it("shows all categories", () => {
-    render(<ProductTreeModal />);
+    render(<ProductCategoryTreeModal />);
     openPopover();
     expect(screen.getByText("Cat A")).toBeInTheDocument();
     expect(screen.getByText("Cat B")).toBeInTheDocument();
@@ -59,7 +58,7 @@ describe("ProductTreeModal", () => {
 
   it("calls onSelect with category only", () => {
     const onSelect = jest.fn();
-    render(<ProductTreeModal onSelect={onSelect} />);
+    render(<ProductCategoryTreeModal onSelect={onSelect} />);
     openPopover();
     fireEvent.click(screen.getByText("Cat B"));
     expect(onSelect).toHaveBeenCalledWith({ category: "Cat B" });
@@ -67,7 +66,7 @@ describe("ProductTreeModal", () => {
 
   it("calls onSelect with category and subCategory", () => {
     const onSelect = jest.fn();
-    render(<ProductTreeModal onSelect={onSelect} />);
+    render(<ProductCategoryTreeModal onSelect={onSelect} />);
     openPopover();
     fireEvent.click(screen.getByText("Cat A"));
     openPopover();
@@ -80,7 +79,7 @@ describe("ProductTreeModal", () => {
 
   it("calls onSelect with category, subCategory, and subDivision", () => {
     const onSelect = jest.fn();
-    render(<ProductTreeModal onSelect={onSelect} />);
+    render(<ProductCategoryTreeModal onSelect={onSelect} />);
     openPopover();
     fireEvent.click(screen.getByText("Cat A"));
     openPopover();
@@ -96,7 +95,7 @@ describe("ProductTreeModal", () => {
 
   it("clears selection and calls onSelect with all", () => {
     const onSelect = jest.fn();
-    render(<ProductTreeModal onSelect={onSelect} />);
+    render(<ProductCategoryTreeModal onSelect={onSelect} />);
     openPopover();
     fireEvent.click(screen.getByText("Cat B"));
     openPopover();
