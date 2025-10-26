@@ -7,6 +7,7 @@ module.exports = {
       {
         protocol: 'https',
         hostname: 'nortimed.com',
+      },
     ],
   },
   i18n,
