@@ -54,17 +54,10 @@ jobs:
       - name: Build Next.js app
         run: bun run build
 
-
-      - name: Generate login-config.json for deployment
-        run: |
-          chmod +x ./scripts/generate-login-config.sh
-          LOGIN_USERNAME="${{ secrets.LOGIN_USERNAME }}" LOGIN_PASSWORD="${{ secrets.LOGIN_PASSWORD }}" ./scripts/generate-login-config.sh
-
-      - name: Deploy to PTServidor via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
         with:
-          server: ${{ secrets.PTSERVIDOR_FTP_SERVER }}
-          username: ${{ secrets.PTSERVIDOR_FTP_USERNAME }}
-          password: ${{ secrets.PTSERVIDOR_FTP_PASSWORD }}
-          local-dir: ./out/
-          server-dir: ${{ secrets.PTSERVIDOR_FTP_REMOTE_DIR || '/' }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: .

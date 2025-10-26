@@ -1,46 +1,33 @@
-import { useEffect, useState } from "react";
 
-interface LoginConfig {
-  enabled: boolean;
-  username: string;
-  password: string;
-}
+import { useEffect, useState } from "react";
 
 export default function StaticLoginGuard({
   children,
 }: {
   children: React.ReactNode;
 }) {
+
   const [showLogin, setShowLogin] = useState(false);
-  const [config, setConfig] = useState<LoginConfig | null>(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [authed, setAuthed] = useState(false);
+  // Read from environment variables (injected at build time)
+  const loginEnabled = process.env.NEXT_PUBLIC_LOGIN_ENABLED === "true";
+  const loginUser = process.env.NEXT_PUBLIC_LOGIN_USERNAME || "";
+  const loginPass = process.env.NEXT_PUBLIC_LOGIN_PASSWORD || "";
 
   useEffect(() => {
-    fetch("/login-config.json")
-      .then((res) => {
-        if (!res.ok) throw new Error("not found");
-        return res.json();
-      })
-      .then((cfg: LoginConfig) => {
-        setConfig(cfg);
-        setShowLogin(
-          cfg.enabled && !localStorage.getItem("static-login-authed"),
-        );
-        setAuthed(!!localStorage.getItem("static-login-authed"));
-      })
-      .catch(() => {
-        // If config is missing, skip login and show website
-        setConfig({ enabled: false, username: "", password: "" });
-      });
-  }, []);
+    setShowLogin(
+      loginEnabled && !localStorage.getItem("static-login-authed")
+    );
+    setAuthed(!!localStorage.getItem("static-login-authed"));
+  }, [loginEnabled]);
+
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!config) return;
-    if (username === config.username && password === config.password) {
+    if (username === loginUser && password === loginPass) {
       localStorage.setItem("static-login-authed", "1");
       setShowLogin(false);
       setAuthed(true);
@@ -50,24 +37,7 @@ export default function StaticLoginGuard({
     }
   };
 
-  if (!config) {
-    return (
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          background: "#fff",
-          zIndex: 9999,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div>Loading...</div>
-      </div>
-    );
-  }
-  if (!config.enabled || authed) return <>{children}</>;
+  if (!loginEnabled || authed) return <>{children}</>;
   if (!showLogin) return null;
 
   return (
