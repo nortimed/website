@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { vi } from 'vitest';
-import '@testing-library/jest-dom';
+import { vi } from "vitest";
+import "@testing-library/jest-dom";
 vi.mock("../../src/data/products.json", () => ({
   default: [
     {
@@ -30,7 +30,7 @@ vi.mock("../../src/data/products.json", () => ({
       images: ["/img3.jpg"],
       description: "desc",
     },
-  ]
+  ],
 }));
 
 import ProductCategoryTreeModal from "../../src/components/ProductCategoryTreeModal";
@@ -48,14 +48,14 @@ describe("ProductCategoryTreeModal", () => {
   it("opens popover on click", () => {
     render(<ProductCategoryTreeModal />);
     openPopover();
-  expect(screen.getByText('select_category')).toBeInTheDocument();
+    expect(screen.getByText("select_category")).toBeInTheDocument();
   });
 
   it("shows all categories", () => {
     render(<ProductCategoryTreeModal />);
     openPopover();
-  expect(screen.getByText("Cat A")).toBeInTheDocument();
-  expect(screen.getByText("Cat B")).toBeInTheDocument();
+    expect(screen.getByText("Cat A")).toBeInTheDocument();
+    expect(screen.getByText("Cat B")).toBeInTheDocument();
   });
 
   it("calls onSelect with category only", () => {

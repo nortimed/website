@@ -12,17 +12,14 @@ import { Button } from "../../components/ui/button";
 import { Tooltip } from "../../components/ui/tooltip";
 import { useTranslation } from "next-i18next";
 
-
 const ProductDetails = () => {
-
   const { t } = useTranslation("common");
   const router = useRouter();
   const { slug } = router.query;
 
-
   // Always call hooks, even if router is not ready or slug is not defined
   // Use a fallback for product if slug is not ready
-  let product: typeof products[0] | undefined = undefined;
+  let product: (typeof products)[0] | undefined = undefined;
   if (typeof slug === "string") {
     product = products.find(
       (p) => p.name.toLowerCase().replace(/\s+/g, "-") === slug,
@@ -30,7 +27,7 @@ const ProductDetails = () => {
   }
 
   const [selectedColor, setSelectedColor] = useState(
-    product && product.colorOptions[0] ? product.colorOptions[0] : ""
+    product && product.colorOptions[0] ? product.colorOptions[0] : "",
   );
   const [tooltipOpenColor, setTooltipOpenColor] = useState<string | null>(null);
 
@@ -47,7 +44,10 @@ const ProductDetails = () => {
       <div className="flex flex-col min-h-screen">
         <main className="flex-1 flex items-center justify-center">
           <div className="flex flex-col items-center justify-center">
-            <span className="inline-block w-12 h-12 mb-4 border-4 border-blue-600 border-t-transparent rounded-full animate-spin shadow-lg" aria-label="Loading" />
+            <span
+              className="inline-block w-12 h-12 mb-4 border-4 border-blue-600 border-t-transparent rounded-full animate-spin shadow-lg"
+              aria-label="Loading"
+            />
           </div>
         </main>
       </div>
@@ -119,21 +119,18 @@ const ProductDetails = () => {
                           const isSelected = selectedColor === color;
                           const open = tooltipOpenColor === color;
                           return (
-                            <Tooltip
-                              key={color}
-                              content={color}
-                              open={!!open}
-                            >
+                            <Tooltip key={color} content={color} open={!!open}>
                               <button
                                 type="button"
                                 aria-label={color}
                                 onClick={() => setSelectedColor(color)}
-                                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all outline-none ${isSelected
-                                  ? "border-blue-600 shadow-[0_0_0_4px_rgba(0,0,0,0.18)] opacity-100"
-                                  : selectedColor
-                                    ? "border-gray-300 opacity-40"
-                                    : "border-gray-300 opacity-100"
-                                  }`}
+                                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all outline-none ${
+                                  isSelected
+                                    ? "border-blue-600 shadow-[0_0_0_4px_rgba(0,0,0,0.18)] opacity-100"
+                                    : selectedColor
+                                      ? "border-gray-300 opacity-40"
+                                      : "border-gray-300 opacity-100"
+                                }`}
                                 style={{
                                   backgroundColor: color.toLowerCase(),
                                   transition: "opacity 0.3s",
@@ -165,7 +162,7 @@ const ProductDetails = () => {
                         let cart: any[] = [];
                         try {
                           cart = JSON.parse(Cookies.get("quoteCart") || "[]");
-                        } catch { }
+                        } catch {}
                         // Avoid duplicates (same product+color)
                         if (
                           !cart.some(
@@ -198,15 +195,14 @@ const ProductDetails = () => {
   );
 };
 
-
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSidePropsContext } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const locale = context.locale || 'en';
+  const locale = context.locale || "en";
   return {
     props: {
-      ...(await serverSideTranslations(locale, ['common'])),
+      ...(await serverSideTranslations(locale, ["common"])),
     },
   };
 }

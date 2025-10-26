@@ -5,11 +5,17 @@ import { vi } from "vitest";
 // Mock fetch for login-config.json
 
 beforeEach(() => {
-  vi.spyOn(global, "fetch").mockImplementation(() =>
-    Promise.resolve({
-      ok: true,
-      json: () => Promise.resolve({ enabled: true, username: "admin", password: "changeme" })
-    }) as any
+  vi.spyOn(global, "fetch").mockImplementation(
+    () =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            enabled: true,
+            username: "admin",
+            password: "changeme",
+          }),
+      }) as any,
   );
   localStorage.clear();
 });
@@ -23,7 +29,7 @@ describe("StaticLoginGuard", () => {
     render(
       <StaticLoginGuard>
         <div>Protected Content</div>
-      </StaticLoginGuard>
+      </StaticLoginGuard>,
     );
     // Wait for either login form or children
     await waitFor(() => {
@@ -40,7 +46,7 @@ describe("StaticLoginGuard", () => {
     render(
       <StaticLoginGuard>
         <div>Protected Content</div>
-      </StaticLoginGuard>
+      </StaticLoginGuard>,
     );
     await waitFor(() => {
       const login = screen.queryByText(/login required/i);
@@ -48,10 +54,16 @@ describe("StaticLoginGuard", () => {
       expect(login || content).toBeTruthy();
     });
     if (screen.queryByText(/login required/i)) {
-      fireEvent.change(screen.getByPlaceholderText(/username/i), { target: { value: "admin" } });
-      fireEvent.change(screen.getByPlaceholderText(/password/i), { target: { value: "changeme" } });
+      fireEvent.change(screen.getByPlaceholderText(/username/i), {
+        target: { value: "admin" },
+      });
+      fireEvent.change(screen.getByPlaceholderText(/password/i), {
+        target: { value: "changeme" },
+      });
       fireEvent.click(screen.getByRole("button", { name: /login/i }));
-      await waitFor(() => expect(screen.getByText(/protected content/i)).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByText(/protected content/i)).toBeInTheDocument(),
+      );
     } else {
       // Already authed, just check content
       expect(screen.getByText(/protected content/i)).toBeInTheDocument();
@@ -62,7 +74,7 @@ describe("StaticLoginGuard", () => {
     render(
       <StaticLoginGuard>
         <div>Protected Content</div>
-      </StaticLoginGuard>
+      </StaticLoginGuard>,
     );
     await waitFor(() => {
       const login = screen.queryByText(/login required/i);
@@ -70,10 +82,16 @@ describe("StaticLoginGuard", () => {
       expect(login || content).toBeTruthy();
     });
     if (screen.queryByText(/login required/i)) {
-      fireEvent.change(screen.getByPlaceholderText(/username/i), { target: { value: "wrong" } });
-      fireEvent.change(screen.getByPlaceholderText(/password/i), { target: { value: "wrong" } });
+      fireEvent.change(screen.getByPlaceholderText(/username/i), {
+        target: { value: "wrong" },
+      });
+      fireEvent.change(screen.getByPlaceholderText(/password/i), {
+        target: { value: "wrong" },
+      });
       fireEvent.click(screen.getByRole("button", { name: /login/i }));
-      expect(await screen.findByText(/invalid username or password/i)).toBeInTheDocument();
+      expect(
+        await screen.findByText(/invalid username or password/i),
+      ).toBeInTheDocument();
       expect(screen.queryByText(/protected content/i)).not.toBeInTheDocument();
     } else {
       // Already authed, just check content
@@ -86,21 +104,28 @@ describe("StaticLoginGuard", () => {
     render(
       <StaticLoginGuard>
         <div>Protected Content</div>
-      </StaticLoginGuard>
+      </StaticLoginGuard>,
     );
-    await waitFor(() => expect(screen.getByText(/protected content/i)).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByText(/protected content/i)).toBeInTheDocument(),
+    );
   });
 
   it("shows content if login is disabled", async () => {
     (global.fetch as any).mockImplementationOnce(() =>
       Promise.resolve({
-        json: () => Promise.resolve({ enabled: false, username: "admin", password: "changeme" })
-      })
+        json: () =>
+          Promise.resolve({
+            enabled: false,
+            username: "admin",
+            password: "changeme",
+          }),
+      }),
     );
     render(
       <StaticLoginGuard>
         <div>Protected Content</div>
-      </StaticLoginGuard>
+      </StaticLoginGuard>,
     );
     // Wait for config to be loaded and content to appear
     expect(await screen.findByText(/protected content/i)).toBeInTheDocument();

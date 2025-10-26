@@ -5,8 +5,8 @@ module.exports = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'nortimed.com',
+        protocol: "https",
+        hostname: "nortimed.com",
       },
     ],
   },
