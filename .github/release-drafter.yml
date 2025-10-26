@@ -1,3 +1,8 @@
+# Required top-level template property for Release Drafter
+template: |
+  ## Changes
+  $CHANGES
+
 # Configuration for Release Drafter
 name-template: 'v$RESOLVED_VERSION'
 tag-template: 'v$RESOLVED_VERSION'
