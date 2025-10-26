@@ -52,6 +52,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
+      - name: Ensure out directory exists
+        run: mkdir -p ./out
+
       - name: Generate login-config.json for deployment
         run: |
           chmod +x ./scripts/generate-login-config.sh
