@@ -69,5 +69,5 @@ jobs:
           server: ${{ secrets.PTSERVIDOR_FTP_SERVER }}
           username: ${{ secrets.PTSERVIDOR_FTP_USERNAME }}
           password: ${{ secrets.PTSERVIDOR_FTP_PASSWORD }}
-          local-dir: ./out
+          local-dir: ./out/
           server-dir: ${{ secrets.PTSERVIDOR_FTP_REMOTE_DIR || '/' }}
