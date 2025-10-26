@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 
 export default function StaticLoginGuard({
@@ -6,7 +5,6 @@ export default function StaticLoginGuard({
 }: {
   children: React.ReactNode;
 }) {
-
   const [showLogin, setShowLogin] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -18,12 +16,9 @@ export default function StaticLoginGuard({
   const loginPass = process.env.NEXT_PUBLIC_LOGIN_PASSWORD || "";
 
   useEffect(() => {
-    setShowLogin(
-      loginEnabled && !localStorage.getItem("static-login-authed")
-    );
+    setShowLogin(loginEnabled && !localStorage.getItem("static-login-authed"));
     setAuthed(!!localStorage.getItem("static-login-authed"));
   }, [loginEnabled]);
-
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
