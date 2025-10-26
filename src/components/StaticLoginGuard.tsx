@@ -44,7 +44,21 @@ export default function StaticLoginGuard({ children }: { children: React.ReactNo
     }
   };
 
-  if (!config) return null;
+  if (!config) {
+    return (
+      <div style={{
+        position: "fixed",
+        inset: 0,
+        background: "#fff",
+        zIndex: 9999,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+        <div>Loading...</div>
+      </div>
+    );
+  }
   if (!config.enabled || authed) return <>{children}</>;
   if (!showLogin) return null;
 
