@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "*/**": {
+      "includeFiles": ["next-i18next.config.js"]
+    }
+  }
+}
