@@ -2,6 +2,7 @@ const { i18n } = require("./next-i18next.config");
 module.exports = {
   turbopack: {},
   reactStrictMode: true,
+  output: 'export',
   images: {
     remotePatterns: [
       {
