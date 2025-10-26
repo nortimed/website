@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { useTranslation } from "next-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import ProductSkeleton from "./ProductSkeleton";
 import productsDataRaw from "../data/products.json";
@@ -13,8 +14,7 @@ import {
 import { Button } from "./ui/button";
 import Link from "next/link";
 import ProductCategoryTreeModal from "./ProductCategoryTreeModal";
-import { Input } from "./ui/input";
-import { Search as SearchIcon } from "lucide-react";
+import ProductNameFilter from "./ProductNameFilter";
 
 interface ProductShowcaseProps {
   onFilterModalOpenChange?: (open: boolean) => void;
@@ -23,19 +23,12 @@ interface ProductShowcaseProps {
 const ProductShowcase: React.FC<ProductShowcaseProps> = ({
   onFilterModalOpenChange,
 }) => {
+  const { t } = useTranslation("common");
   // Load and preprocess product data
-  const DEFAULT_IMAGE = "/favicon.ico"; // You can replace this with a better placeholder
-  const products: Product[] = (productsDataRaw as any[]).map((p: any) => {
-    let images = p.images;
-    if (!images || !Array.isArray(images) || images.length === 0) {
-      images = [DEFAULT_IMAGE];
-    }
-    return {
-      ...p,
-      images,
-      subDivision: p.subDivision === null ? "" : p.subDivision,
-    };
-  });
+  const products: Product[] = (productsDataRaw as any[]).map((p: any) => ({
+    ...p,
+    subDivision: p.subDivision === null ? "" : p.subDivision,
+  }));
   // Local filter state
   const [category, setCategory] = useState<string>("all");
   const [subCategory, setSubCategory] = useState<string>("all");
@@ -107,7 +100,7 @@ const ProductShowcase: React.FC<ProductShowcaseProps> = ({
     <section id="products" className="py-16 px-4 bg-white">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
-          Our Products
+          {t("our_products")}
         </h2>
         <div ref={overlapSentinelRef} style={{ height: 0 }} />
         <div
@@ -127,24 +120,15 @@ const ProductShowcase: React.FC<ProductShowcaseProps> = ({
                   setSubDivision(subDiv || "all");
                 }}
                 onOpenChange={onFilterModalOpenChange}
-                triggerClassName="w-[260px] max-w-xs h-12 rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150 flex items-center px-3 focus:!border-blue-500 focus:!ring-0 active:!border-blue-500 justify-between"
+                triggerClassName=""
                 popoverContentClassName="border border-gray-300 shadow-md"
               />
             </div>
-            <div className="relative w-[260px] max-w-xs h-12">
-              <div className="rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150 flex items-center px-3 h-12 focus-within:border-blue-500">
-                <Input
-                  type="text"
-                  placeholder="Search by product name..."
-                  value={nameFilter}
-                  onChange={(e) => setNameFilter(e.target.value)}
-                  className="pr-10 bg-transparent !border-none !ring-0 shadow-none focus:!border-none focus:!ring-0 focus:outline-none active:!border-none h-10"
-                />
-                <span className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                  <SearchIcon className="w-5 h-5" />
-                </span>
-              </div>
-            </div>
+            <ProductNameFilter
+              value={nameFilter}
+              onChange={(e) => setNameFilter(e.target.value)}
+              placeholder={t("search_by_product_name")}
+            />
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
@@ -170,63 +154,45 @@ const ProductShowcase: React.FC<ProductShowcaseProps> = ({
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3, delay: idx * 0.04 }}
                   >
-                    <Card className="flex flex-col h-full rounded-lg shadow-lg border border-gray-200">
-                      <img
-                        src={product.images[0]}
-                        alt={product.name}
-                        className="w-full h-48 object-cover rounded-t-xl"
-                        onLoad={() =>
-                          setLoaded((l) => ({ ...l, [product.name]: true }))
-                        }
-                        onError={(e) => {
-                          const target = e.currentTarget;
-                          if (
-                            !target.src.endsWith("/images/product/image.png")
-                          ) {
-                            target.src = "/images/product/image.png";
+                    <Link
+                      href={`/product/${encodeURIComponent(product.name.toLowerCase().replace(/\s+/g, "-"))}`}
+                      className="block group"
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Card className="flex flex-col h-96 rounded-lg shadow-lg border border-gray-200 transition-transform duration-200 group-hover:scale-102 group-hover:shadow-lg cursor-pointer">
+                        <img
+                          src={product.images[0]}
+                          alt={product.name}
+                          className="w-full h-48 object-cover rounded-t-xl"
+                          onLoad={() =>
+                            setLoaded((l) => ({ ...l, [product.name]: true }))
                           }
-                        }}
-                        style={{
-                          display:
-                            loaded[product.name] || IGNORE_IMAGE_LOAD
-                              ? "block"
-                              : "none",
-                        }}
-                      />
-                      {(loaded[product.name] || IGNORE_IMAGE_LOAD) && (
-                        <>
-                          <CardHeader className="pb-2">
-                            <CardTitle className="text-lg">
-                              {product.name}
-                            </CardTitle>
-                            <CardDescription>
-                              {product.category}
-                            </CardDescription>
-                          </CardHeader>
-                          <CardContent className="flex-1 flex flex-col justify-between">
-                            <p className="text-gray-600 text-sm mb-2 flex-1">
-                              {product.description}
-                            </p>
-                            {product.colorOptions.length > 0 && (
-                              <div className="text-xs text-gray-500 mb-2">
-                                Colors: {product.colorOptions.join(", ")}
-                              </div>
-                            )}
-                            <Button
-                              asChild
-                              className="w-full mt-2 bg-blue-700 hover:bg-blue-800 text-white"
-                              variant="default"
-                            >
-                              <Link
-                                href={`/product/${encodeURIComponent(product.name.toLowerCase().replace(/\s+/g, "-"))}`}
-                              >
-                                View Details
-                              </Link>
-                            </Button>
-                          </CardContent>
-                        </>
-                      )}
-                    </Card>
+                          onError={(e) => {
+                            const target = e.currentTarget;
+                            if (
+                              !target.src.endsWith("/images/product/image.png")
+                            ) {
+                              target.src = "/images/product/image.png";
+                            }
+                          }}
+                          style={{
+                            display:
+                              loaded[product.name] || IGNORE_IMAGE_LOAD
+                                ? "block"
+                                : "none",
+                          }}
+                        />
+                        {(loaded[product.name] || IGNORE_IMAGE_LOAD) && (
+                          <>
+                            <CardHeader className="flex-1 flex flex-col items-center justify-center pb-2">
+                              <CardTitle className="text-lg text-center">
+                                {product.name}
+                              </CardTitle>
+                            </CardHeader>
+                          </>
+                        )}
+                      </Card>
+                    </Link>
                   </motion.div>
                 ))}
           </AnimatePresence>

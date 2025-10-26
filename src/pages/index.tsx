@@ -1,11 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
 import HeroSection from "../components/HeroSection";
 import ProductShowcase from "../components/ProductShowcase";
 import FeaturesSection from "../components/FeaturesSection";
 import { SectionTransition } from "../components/SectionTransition";
-import { Input } from "../components/ui/input";
 
 const Home: React.FC = () => {
+  const { t } = useTranslation("common");
   // Overlay state for filter modal
   const [filterOverlayOpen, setFilterOverlayOpen] = useState(false);
 
@@ -43,7 +45,8 @@ const Home: React.FC = () => {
           aria-hidden="true"
         />
       )}
-      <HeroSection />
+      {/* Pass t to HeroSection for translation */}
+      <HeroSection t={t} />
       <div ref={productsRef} id="products" className="mt-16 scroll-mt-16">
         {/* Filter bar is now inside ProductShowcase */}
         <SectionTransition animate={false}>
@@ -53,6 +56,16 @@ const Home: React.FC = () => {
       <FeaturesSection />
     </div>
   );
+};
+
+import { GetStaticProps } from "next";
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale ?? "en", ["common"])),
+    },
+  };
 };
 
 export default Home;

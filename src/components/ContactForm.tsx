@@ -3,8 +3,10 @@ import { Input } from "./ui/input";
 import { EmailInput } from "./ui/email-input";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
+import { useTranslation } from "next-i18next";
 
 const ContactForm: React.FC = () => {
+  const { t } = useTranslation("common");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -18,11 +20,11 @@ const ContactForm: React.FC = () => {
     setSuccess(false);
 
     if (!name || !email || !message) {
-      setError("All fields are required.");
+      setError(t("all_fields_required"));
       return;
     }
     if (message.length > MESSAGE_MAX) {
-      setError(`Message must be at most ${MESSAGE_MAX} characters.`);
+      setError(t("message_too_long", { max: MESSAGE_MAX }));
       return;
     }
 
@@ -39,9 +41,7 @@ const ContactForm: React.FC = () => {
       <div className="max-w-lg mx-auto bg-gray-50 rounded-xl shadow-lg p-8">
         {error && <p className="text-red-600 text-center mb-2">{error}</p>}
         {success && (
-          <p className="text-green-600 text-center mb-2">
-            Your message has been sent!
-          </p>
+          <p className="text-green-600 text-center mb-2">{t("message_sent")}</p>
         )}
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
@@ -49,7 +49,7 @@ const ContactForm: React.FC = () => {
               htmlFor="name"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Name
+              {t("name")}
             </label>
             <Input
               type="text"
@@ -64,7 +64,7 @@ const ContactForm: React.FC = () => {
               htmlFor="email"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Email
+              {t("email")}
             </label>
             <EmailInput id="email" value={email} onChange={setEmail} required />
           </div>
@@ -73,7 +73,7 @@ const ContactForm: React.FC = () => {
               htmlFor="message"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Message
+              {t("message")}
             </label>
             <Textarea
               id="message"
@@ -91,7 +91,7 @@ const ContactForm: React.FC = () => {
             </div>
           </div>
           <Button type="submit" className="w-full py-3 font-semibold">
-            Send Message
+            {t("send_message")}
           </Button>
         </form>
       </div>

@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "next-i18next";
 
 const Footer: React.FC = () => {
+  const { t } = useTranslation("common");
   return (
     <footer className="bg-gradient-to-r from-blue-900 to-green-800 text-white py-8 mt-12">
       <div className="max-w-4xl mx-auto px-4 text-center">
@@ -11,7 +13,7 @@ const Footer: React.FC = () => {
             rel="noopener noreferrer"
             className="hover:text-blue-300 transition"
           >
-            Facebook
+            {t("facebook")}
           </a>
           <a
             href="https://twitter.com/nortimed"
@@ -19,7 +21,7 @@ const Footer: React.FC = () => {
             rel="noopener noreferrer"
             className="hover:text-blue-300 transition"
           >
-            Twitter
+            {t("twitter")}
           </a>
           <a
             href="https://instagram.com/nortimed"
@@ -27,12 +29,12 @@ const Footer: React.FC = () => {
             rel="noopener noreferrer"
             className="hover:text-blue-300 transition"
           >
-            Instagram
+            {t("instagram")}
           </a>
         </div>
         <div className="mb-2">
           <p className="text-sm">
-            Contact us:{" "}
+            {t("contact_us")}{" "}
             <a
               href="mailto:info@nortimed.com"
               className="underline hover:text-blue-200"
@@ -49,7 +51,8 @@ const Footer: React.FC = () => {
           </p>
         </div>
         <p className="text-xs text-gray-200">
-          &copy; {new Date().getFullYear()} Nortimed. All rights reserved.
+          &copy; {new Date().getFullYear()} {t("nortimed")}.{" "}
+          {t("all_rights_reserved")}
         </p>
       </div>
     </footer>

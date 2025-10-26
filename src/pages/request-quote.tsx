@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import productsData from "../data/products.json";
 import { Input } from "../components/ui/input";
+import { Plus } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Trash2 } from "lucide-react";
 import {
@@ -12,9 +13,11 @@ import {
   SelectContent,
   SelectItem,
 } from "../components/ui/select";
-import ProductTreeModal from "../components/ProductCategoryTreeModal";
+import ProductCategoryTreeModal from "../components/ProductCategoryTreeModal";
+import ProductNameFilter from "../components/ProductNameFilter";
 import { Card } from "../components/ui/card";
 import { PhoneInput } from "../components/ui/phone-input";
+import { useTranslation } from "next-i18next";
 
 interface QuoteProduct {
   name: string;
@@ -23,6 +26,7 @@ interface QuoteProduct {
 }
 
 const RequestQuote: React.FC = () => {
+  const { t } = useTranslation("common");
   // Read product/color from sessionStorage if present
   const [pendingProduct, setPendingProduct] = useState<{
     product: string;
@@ -47,7 +51,6 @@ const RequestQuote: React.FC = () => {
       }
     }
   }, []);
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -178,7 +181,10 @@ const RequestQuote: React.FC = () => {
     subDivision?: string;
   }>({});
 
-  // Filter products by combobox
+  // Product name filter (new)
+  const [nameFilter, setNameFilter] = useState("");
+
+  // Filter products by combobox and name
   const filteredProducts = productsData.filter((p) => {
     if (
       filter.category &&
@@ -196,6 +202,11 @@ const RequestQuote: React.FC = () => {
       filter.subDivision &&
       filter.subDivision !== "all" &&
       p.subDivision !== filter.subDivision
+    )
+      return false;
+    if (
+      nameFilter.trim() &&
+      !p.name.toLowerCase().includes(nameFilter.trim().toLowerCase())
     )
       return false;
     return true;
@@ -300,24 +311,36 @@ const RequestQuote: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block mb-1 font-medium">Name</label>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
+                <div className="rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150 focus-within:border-blue-500">
+                  <Input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    className="border-none shadow-none focus:ring-0 focus:border-none"
+                  />
+                </div>
               </div>
               <div>
                 <label className="block mb-1 font-medium">Email</label>
-                <EmailInput value={email} onChange={setEmail} required />
+                <div className="rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150 focus-within:border-blue-500">
+                  <EmailInput
+                    value={email}
+                    onChange={setEmail}
+                    required
+                    className="border-none shadow-none focus:ring-0 focus:border-none"
+                  />
+                </div>
               </div>
               <div className="md:col-span-2">
                 <label className="block mb-1 font-medium">Phone</label>
-                <PhoneInput
-                  value={phone}
-                  onChange={setPhone}
-                  country={country}
-                  onCountryChange={setCountry}
-                />
+                <div className="rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150 focus-within:border-blue-500">
+                  <PhoneInput
+                    value={phone}
+                    onChange={setPhone}
+                    country={country}
+                    onCountryChange={setCountry}
+                  />
+                </div>
               </div>
             </div>
             <div>
@@ -325,317 +348,369 @@ const RequestQuote: React.FC = () => {
                 <label className="block mb-1 font-medium" htmlFor="notes">
                   Notes
                 </label>
-                <textarea
-                  id="notes"
-                  name="notes"
-                  maxLength={500}
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  className="w-full rounded border px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring resize-vertical min-h-[80px]"
-                  placeholder="Add any relevant notes (max 500 characters)"
-                />
+                <div className="rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150 focus-within:border-blue-500">
+                  <textarea
+                    id="notes"
+                    name="notes"
+                    maxLength={500}
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    className="w-full rounded border-none px-3 py-2 text-sm shadow-none focus:outline-none focus:ring-0 focus:border-none resize-vertical min-h-[80px]"
+                    placeholder="Add any relevant notes (max 500 characters)"
+                  />
+                </div>
                 <div className="text-xs text-gray-500 text-right">
                   {notes.length}/500
                 </div>
               </div>
               <h2 className="text-xl font-semibold mb-4">Products</h2>
-              <div className="flex flex-col md:flex-row gap-4 items-end mb-6">
-                <div className="flex-1 flex flex-col gap-2">
-                  <ProductTreeModal
-                    onSelect={(f) => {
-                      setFilter(f);
-                      setProductToAdd("");
-                      setColorToAdd("");
-                    }}
-                  />
-                  <Select
-                    value={productToAdd}
-                    onValueChange={(val) => {
-                      setProductToAdd(val);
-                      setColorToAdd("");
-                    }}
-                    disabled={noMoreProducts}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue
-                        placeholder={
-                          noMoreProducts
-                            ? "No more available products"
-                            : "Add a product"
-                        }
-                      />
-                    </SelectTrigger>
-                    <SelectContent className="max-h-80 overflow-y-auto">
-                      {availableProducts.map((product) => {
-                        let label = product.name;
-                        const availableColors = Array.isArray(
-                          product.colorOptions,
-                        )
-                          ? product.colorOptions.filter(
-                              (color) =>
-                                !selectedProducts.some(
-                                  (sp) =>
-                                    sp.name === product.name &&
-                                    sp.color === color,
-                                ),
-                            )
-                          : [];
-                        if (availableColors.length === 1) {
-                          label += ` (${availableColors[0]})`;
-                        }
-                        return (
-                          <SelectItem
-                            key={product.name}
-                            value={product.name}
-                            className="py-4 px-4 min-h-[64px] text-base"
-                          >
-                            <div className="flex items-center gap-4">
-                              <img
-                                src={product.images[0]}
-                                alt={product.name}
-                                className="w-12 h-12 object-cover rounded"
-                              />
-                              <span className="font-medium">{label}</span>
-                            </div>
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                  {noMoreProducts && (
-                    <div className="text-sm text-gray-500 mt-2">
-                      All products have been added to the quote request.
-                    </div>
-                  )}
+              <div className="mb-6">
+                {/* Filter bar: same line on desktop, stacked on mobile */}
+                <div className="flex flex-row items-stretch w-auto gap-x-3">
+                  <div className="flex flex-row items-center gap-x-3 mb-4">
+                    <ProductCategoryTreeModal
+                      triggerClassName=""
+                      popoverContentClassName="border border-gray-300 shadow-md"
+                      onSelect={(newFilter) => setFilter(newFilter)}
+                    />
+                    <ProductNameFilter
+                      value={nameFilter}
+                      onChange={(e) => setNameFilter(e.target.value)}
+                      placeholder={t("search_by_product_name")}
+                    />
+                  </div>
                 </div>
-                {productToAdd &&
-                  (() => {
-                    let name = productToAdd;
-                    let color: string | undefined = undefined;
-                    if (productToAdd.includes("||")) {
-                      [name, color] = productToAdd.split("||");
-                    }
-                    const prod = productsData.find((p) => p.name === name);
-                    if (
-                      prod &&
-                      prod.colorOptions &&
-                      prod.colorOptions.length > 0
-                    ) {
-                      // Only show colors not already selected for this product
-                      const availableColors = prod.colorOptions.filter(
-                        (c) =>
-                          !selectedProducts.some(
-                            (sp) => sp.name === prod.name && sp.color === c,
-                          ),
-                      );
-                      const onlyOneColor = availableColors.length === 1;
-                      return (
-                        <>
-                          <div>
-                            <label className="block text-xs mb-1">
-                              Quantity
-                            </label>
-                            <Input
-                              type="number"
-                              min={1}
-                              value={quantityToAdd}
-                              onChange={(e) =>
-                                setQuantityToAdd(Number(e.target.value))
-                              }
-                              className="w-20"
-                            />
-                          </div>
-                          {!onlyOneColor && (
-                            <div>
-                              <label className="block text-xs mb-1">
-                                Color
-                              </label>
-                              <Select
-                                value={colorToAdd}
-                                onValueChange={setColorToAdd}
-                              >
-                                <SelectTrigger className="w-28">
-                                  <SelectValue placeholder="Select color" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {availableColors.map((c) => (
-                                    <SelectItem key={c} value={c}>
-                                      {c}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          )}
-                          <Button
-                            type="button"
-                            onClick={handleAddProduct}
-                            className="ml-2"
-                            disabled={!colorToAdd}
-                          >
-                            Add
-                          </Button>
-                        </>
-                      );
-                    } else {
-                      // No color options, just show quantity and add button
-                      return (
-                        <>
-                          <div>
-                            <label className="block text-xs mb-1">
-                              Quantity
-                            </label>
-                            <Input
-                              type="number"
-                              min={1}
-                              value={quantityToAdd}
-                              onChange={(e) =>
-                                setQuantityToAdd(Number(e.target.value))
-                              }
-                              className="w-20"
-                            />
-                          </div>
-                          <Button
-                            type="button"
-                            onClick={handleAddProduct}
-                            className="ml-2"
-                          >
-                            Add
-                          </Button>
-                        </>
-                      );
-                    }
-                  })()}
-              </div>
-              <div className="space-y-4">
-                {selectedProducts
-                  .filter((sp) => sp.name && sp.name.trim() !== "")
-                  .map((sp, idx) => {
-                    const prod = productsData.find((p) => p.name === sp.name);
-                    const colorStr = normalizeColor(sp.color);
-                    return (
-                      <Card
-                        key={sp.name + "|||" + colorStr}
-                        className="flex items-center gap-4 p-4"
+
+                {/* Product select and add controls in a single row on desktop, stacked on mobile */}
+                <div className="flex flex-col md:flex-row gap-2 w-full items-end">
+                  <div className="flex flex-wrap gap-2 w-full items-end min-w-0">
+                    <div className="flex-1 min-w-0">
+                      <label className="block text-xs mb-1">Product</label>
+                      <Select
+                        value={productToAdd}
+                        onValueChange={(val) => {
+                          setProductToAdd(val);
+                          setColorToAdd("");
+                        }}
+                        disabled={noMoreProducts}
                       >
-                        <img
-                          src={prod?.images?.[0] || ""}
-                          alt={sp.name}
-                          className="w-12 h-12 object-cover rounded"
-                          onError={(e) => {
-                            const target = e.currentTarget;
-                            if (
-                              !target.src.endsWith("/images/product/image.png")
-                            ) {
-                              target.src = "/images/product/image.png";
+                        <SelectTrigger className="w-full min-w-0 rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150 focus-within:border-blue-500">
+                          <SelectValue
+                            placeholder={
+                              noMoreProducts
+                                ? "No more available products"
+                                : "Add a product"
                             }
-                          }}
-                        />
-                        <div className="flex-1">
-                          <div className="font-semibold">
-                            {sp.name}
-                            {colorStr ? ` (${colorStr})` : ""}
-                          </div>
-                          <div className="flex gap-4 mt-1">
-                            <div>
-                              <label className="block text-xs mb-1">
-                                Quantity
-                              </label>
-                              <Input
-                                type="number"
-                                min={1}
-                                value={sp.quantity}
-                                onChange={(e) =>
-                                  handleProductChange(
-                                    idx,
-                                    "quantity",
-                                    Number(e.target.value),
-                                  )
-                                }
-                                className="w-20"
-                              />
-                            </div>
-                            {prod &&
-                              Array.isArray(prod.colorOptions) &&
-                              prod.colorOptions.length > 0 &&
-                              (() => {
-                                const availableColors =
-                                  prod.colorOptions.filter(
-                                    (color) =>
-                                      !selectedProducts.some(
-                                        (spp, i) =>
-                                          i !== idx &&
-                                          spp.name === prod.name &&
-                                          normalizeColor(spp.color) === color,
-                                      ) || color === colorStr,
-                                  );
-                                if (availableColors.length === 1) {
-                                  // If only one color, do not show picker, but auto-set color if not already set
-                                  if (colorStr !== availableColors[0]) {
-                                    setTimeout(
-                                      () =>
-                                        handleProductChange(
-                                          idx,
-                                          "color",
-                                          availableColors[0],
-                                        ),
-                                      0,
-                                    );
-                                  }
-                                  return null;
-                                }
-                                return (
-                                  <div>
-                                    <label className="block text-xs mb-1">
-                                      Color
-                                    </label>
-                                    <Select
-                                      value={colorStr || availableColors[0]}
-                                      onValueChange={(val) =>
-                                        handleProductChange(idx, "color", val)
-                                      }
-                                    >
-                                      <SelectTrigger className="w-28">
-                                        <SelectValue placeholder="Select color" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        {availableColors.map((color) => (
-                                          <SelectItem key={color} value={color}>
-                                            {color}
-                                          </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
-                                  </div>
-                                );
-                              })()}
-                          </div>
+                          />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-80 overflow-y-auto rounded-lg border border-gray-300 bg-white shadow-md">
+                          {availableProducts.map((product) => {
+                            let label = product.name;
+                            const availableColors = Array.isArray(
+                              product.colorOptions,
+                            )
+                              ? product.colorOptions.filter(
+                                  (color) =>
+                                    !selectedProducts.some(
+                                      (sp) =>
+                                        sp.name === product.name &&
+                                        sp.color === color,
+                                    ),
+                                )
+                              : [];
+                            if (availableColors.length === 1) {
+                              label += ` (${availableColors[0]})`;
+                            }
+                            return (
+                              <SelectItem
+                                key={product.name}
+                                value={product.name}
+                                className="py-4 px-4 min-h-[64px] text-base"
+                              >
+                                <div className="flex items-center gap-4">
+                                  {/* Only show image if not selected */}
+                                  {!productToAdd && (
+                                    <img
+                                      src={product.images[0]}
+                                      alt={product.name}
+                                      className="w-12 h-12 object-cover rounded"
+                                    />
+                                  )}
+                                  <span className="font-medium truncate block">
+                                    {label}
+                                  </span>
+                                </div>
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                      {noMoreProducts && (
+                        <div className="text-sm text-gray-500 mt-2">
+                          All products have been added to the quote request.
                         </div>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          onClick={() => handleRemoveProduct(idx)}
-                          className="p-2 rounded-full hover:bg-red-50 group"
-                          aria-label="Remove product"
+                      )}
+                    </div>
+                    {/* Add controls: Quantity, Color, Add button */}
+                    {productToAdd &&
+                      (() => {
+                        let name = productToAdd;
+                        let color: string | undefined = undefined;
+                        if (productToAdd.includes("||")) {
+                          [name, color] = productToAdd.split("||");
+                        }
+                        const prod = productsData.find((p) => p.name === name);
+                        if (
+                          prod &&
+                          prod.colorOptions &&
+                          prod.colorOptions.length > 0
+                        ) {
+                          // Only show colors not already selected for this product
+                          const availableColors = prod.colorOptions.filter(
+                            (c) =>
+                              !selectedProducts.some(
+                                (sp) => sp.name === prod.name && sp.color === c,
+                              ),
+                          );
+                          const onlyOneColor = availableColors.length === 1;
+                          return (
+                            <>
+                              <div className="flex flex-col flex-initial min-w-0 w-22">
+                                <label className="block text-xs mb-1">
+                                  Quantity
+                                </label>
+                                <div className="rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150 focus-within:border-blue-500">
+                                  <Input
+                                    type="number"
+                                    min={1}
+                                    value={quantityToAdd}
+                                    onChange={(e) =>
+                                      setQuantityToAdd(Number(e.target.value))
+                                    }
+                                    className="w-full border-none shadow-none focus:ring-0 focus:border-none"
+                                  />
+                                </div>
+                              </div>
+                              {!onlyOneColor && (
+                                <div className="flex flex-col flex-initial min-w-0 w-30">
+                                  <label className="block text-xs mb-1">
+                                    Color
+                                  </label>
+                                  <Select
+                                    value={colorToAdd}
+                                    onValueChange={setColorToAdd}
+                                  >
+                                    <SelectTrigger className="w-full rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150 focus-within:border-blue-500">
+                                      <SelectValue placeholder="Select color" />
+                                    </SelectTrigger>
+                                    <SelectContent className="rounded-lg border border-gray-300 bg-white shadow-md">
+                                      {availableColors.map((c) => (
+                                        <SelectItem key={c} value={c}>
+                                          {c}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              )}
+                              <div className="flex flex-col justify-end flex-shrink-0">
+                                <Button
+                                  type="button"
+                                  onClick={handleAddProduct}
+                                  className="p-2 rounded-full bg-green-50 hover:bg-green-200 text-green-700 transition-colors border border-green-100 hover:border-green-300 shadow-sm"
+                                  disabled={!onlyOneColor && !colorToAdd}
+                                  aria-label="Add product"
+                                >
+                                  <Plus className="w-5 h-5" />
+                                </Button>
+                              </div>
+                            </>
+                          );
+                        } else {
+                          // No color options, just show quantity and add button
+                          return (
+                            <>
+                              <div className="flex flex-col w-32 min-w-0">
+                                <label className="block text-xs mb-1">
+                                  Quantity
+                                </label>
+                                <div className="rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150 focus-within:border-blue-500">
+                                  <Input
+                                    type="number"
+                                    min={1}
+                                    value={quantityToAdd}
+                                    onChange={(e) =>
+                                      setQuantityToAdd(Number(e.target.value))
+                                    }
+                                    className="w-full border-none shadow-none focus:ring-0 focus:border-none"
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex flex-col justify-end">
+                                <Button
+                                  type="button"
+                                  onClick={handleAddProduct}
+                                  className="p-2 rounded-full bg-green-50 hover:bg-green-200 text-green-700 transition-colors border border-green-100 hover:border-green-300 shadow-sm"
+                                  aria-label="Add product"
+                                >
+                                  <Plus className="w-5 h-5" />
+                                </Button>
+                              </div>
+                            </>
+                          );
+                        }
+                      })()}
+                  </div>
+                </div>
+                {/* Product list rendering below: only render selected products, with their controls */}
+                <div className="space-y-4 mt-6">
+                  {selectedProducts
+                    .filter((sp) => sp.name && sp.name.trim() !== "")
+                    .map((sp, idx) => {
+                      const prod = productsData.find((p) => p.name === sp.name);
+                      const colorStr = normalizeColor(sp.color);
+                      return (
+                        <Card
+                          key={sp.name + "|||" + colorStr}
+                          className="flex items-center gap-4 p-4 rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150"
                         >
-                          <Trash2 className="w-5 h-5 text-gray-400 group-hover:text-red-600 md:text-gray-400 md:group-hover:text-red-600 sm:text-red-600" />
-                        </Button>
-                      </Card>
-                    );
-                  })}
+                          <img
+                            src={prod?.images?.[0] || ""}
+                            alt={sp.name}
+                            className="w-12 h-12 object-cover rounded"
+                            onError={(e) => {
+                              const target = e.currentTarget;
+                              if (
+                                !target.src.endsWith(
+                                  "/images/product/image.png",
+                                )
+                              ) {
+                                target.src = "/images/product/image.png";
+                              }
+                            }}
+                          />
+                          <div className="flex-1">
+                            <div className="font-semibold">
+                              {sp.name}
+                              {colorStr ? ` (${colorStr})` : ""}
+                            </div>
+                            <div className="flex gap-4 mt-1">
+                              <div>
+                                <label className="block text-xs mb-1">
+                                  Quantity
+                                </label>
+                                <div className="rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150 focus-within:border-blue-500 w-20">
+                                  <Input
+                                    type="number"
+                                    min={1}
+                                    value={sp.quantity}
+                                    onChange={(e) =>
+                                      handleProductChange(
+                                        idx,
+                                        "quantity",
+                                        Number(e.target.value),
+                                      )
+                                    }
+                                    className="w-full border-none shadow-none focus:ring-0 focus:border-none"
+                                  />
+                                </div>
+                              </div>
+                              {prod &&
+                                Array.isArray(prod.colorOptions) &&
+                                prod.colorOptions.length > 0 &&
+                                (() => {
+                                  const availableColors =
+                                    prod.colorOptions.filter(
+                                      (color) =>
+                                        !selectedProducts.some(
+                                          (spp, i) =>
+                                            i !== idx &&
+                                            spp.name === prod.name &&
+                                            normalizeColor(spp.color) === color,
+                                        ) || color === colorStr,
+                                    );
+                                  if (availableColors.length === 1) {
+                                    if (colorStr !== availableColors[0]) {
+                                      setTimeout(
+                                        () =>
+                                          handleProductChange(
+                                            idx,
+                                            "color",
+                                            availableColors[0],
+                                          ),
+                                        0,
+                                      );
+                                    }
+                                    return null;
+                                  }
+                                  return (
+                                    <div>
+                                      <label className="block text-xs mb-1">
+                                        Color
+                                      </label>
+                                      <Select
+                                        value={colorStr || availableColors[0]}
+                                        onValueChange={(val) =>
+                                          handleProductChange(idx, "color", val)
+                                        }
+                                      >
+                                        <SelectTrigger className="w-28 rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150 focus-within:border-blue-500">
+                                          <SelectValue placeholder="Select color" />
+                                        </SelectTrigger>
+                                        <SelectContent className="rounded-lg border border-gray-300 bg-white shadow-md">
+                                          {availableColors.map((color) => (
+                                            <SelectItem
+                                              key={color}
+                                              value={color}
+                                            >
+                                              {color}
+                                            </SelectItem>
+                                          ))}
+                                        </SelectContent>
+                                      </Select>
+                                    </div>
+                                  );
+                                })()}
+                            </div>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            onClick={() => handleRemoveProduct(idx)}
+                            className="p-2 rounded-full hover:bg-red-50 group"
+                            aria-label="Remove product"
+                          >
+                            <Trash2 className="w-5 h-5 text-gray-400 group-hover:text-red-600 md:text-gray-400 md:group-hover:text-red-600 sm:text-red-600" />
+                          </Button>
+                        </Card>
+                      );
+                    })}
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full py-3 font-semibold text-lg mt-8 bg-blue-700 hover:bg-blue-800 text-white"
+                >
+                  Submit Quote Request
+                </Button>
               </div>
-            </div>
-            <Button
-              type="submit"
-              className="w-full py-3 font-semibold text-lg mt-8 bg-blue-700 hover:bg-blue-800 text-white"
-            >
-              Submit Quote Request
-            </Button>
+            </div>{" "}
+            {/* <-- Close the div opened after the grid for notes/products/controls */}
           </form>
         </div>
       </main>
     </div>
   );
+};
+
+import { GetStaticProps } from "next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale ?? "en", ["common"])),
+    },
+  };
 };
 
 export default RequestQuote;

@@ -13,6 +13,7 @@ interface PhoneInputProps {
   onChange: (value: string) => void;
   country: Country;
   onCountryChange: (country: Country) => void;
+  className?: string;
 }
 
 export const PhoneInput: React.FC<PhoneInputProps> = ({
@@ -20,6 +21,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
   onChange,
   country,
   onCountryChange,
+  className = "",
 }) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -45,11 +47,11 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
   }, [open]);
 
   return (
-    <div className="flex" ref={containerRef}>
-      <div className="relative">
+    <div className={`flex ${className}`} ref={containerRef}>
+      <div className="relative flex-shrink-0">
         <button
           type="button"
-          className="flex items-center px-2 border border-gray-300 rounded-l bg-white h-10 focus:outline-none focus:ring-1 focus:ring-blue-400"
+          className="flex items-center px-2 bg-white h-10 border-r border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-400 rounded-l-lg"
           tabIndex={0}
           onClick={() => setOpen((v) => !v)}
           aria-haspopup="listbox"
@@ -99,9 +101,15 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
       </div>
       <input
         type="tel"
-        className="flex-1 border border-l-0 border-gray-300 rounded-r px-3 h-10 focus:outline-none focus:ring-1 focus:ring-blue-400"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        className="flex-1 bg-white px-3 h-10 focus:outline-none focus:ring-1 focus:ring-blue-400 rounded-r-lg border-0"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {
+          // Only allow numbers
+          const numeric = e.target.value.replace(/[^0-9]/g, "");
+          onChange(numeric);
+        }}
         placeholder="Phone number"
       />
     </div>

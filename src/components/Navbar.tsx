@@ -4,6 +4,7 @@ import { ShoppingCart, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Button } from "./ui/button";
+import { useTranslation } from "next-i18next";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
@@ -11,6 +12,7 @@ const Navbar: React.FC = () => {
   const [show, setShow] = useState(!isHome);
   const [cartCount, setCartCount] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { t } = useTranslation("common");
 
   // Watch for cart changes in cookies
   useEffect(() => {
@@ -105,7 +107,7 @@ const Navbar: React.FC = () => {
                 variant="ghost"
                 className="font-medium cursor-pointer transition-all duration-150 active:scale-90 focus-visible:scale-90 active:shadow-md focus-visible:shadow-md"
               >
-                Products
+                {t("products_nav")}
               </Button>
             </a>
             {router.pathname !== "/contact" && (
@@ -114,7 +116,7 @@ const Navbar: React.FC = () => {
                   variant="ghost"
                   className="font-medium cursor-pointer transition-all duration-150 active:scale-90 focus-visible:scale-90 active:shadow-md focus-visible:shadow-md"
                 >
-                  Contact
+                  {t("contact_nav")}
                 </Button>
               </Link>
             )}
@@ -125,7 +127,7 @@ const Navbar: React.FC = () => {
                   variant="outline"
                   className="font-medium border-blue-700 text-blue-700 hover:bg-blue-50 cursor-pointer"
                 >
-                  Request Quote
+                  {t("request_quote")}
                 </Button>
               </Link>
             )}
@@ -182,7 +184,7 @@ const Navbar: React.FC = () => {
                 className="py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Products
+                {t("products_nav")}
               </a>
               {router.pathname !== "/contact" && (
                 <Link
@@ -190,7 +192,7 @@ const Navbar: React.FC = () => {
                   className="py-2"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Contact
+                  {t("contact_nav")}
                 </Link>
               )}
               {router.pathname !== "/request-quote" && cartCount === 0 && (
@@ -203,7 +205,7 @@ const Navbar: React.FC = () => {
                     variant="outline"
                     className="w-full border-blue-700 text-blue-700"
                   >
-                    Request Quote
+                    {t("request_quote")}
                   </Button>
                 </Link>
               )}
@@ -215,7 +217,9 @@ const Navbar: React.FC = () => {
                 >
                   <div className="flex items-center">
                     <ShoppingCart className="w-6 h-6 text-blue-700" />
-                    <span className="ml-2">Cart ({cartCount})</span>
+                    <span className="ml-2">
+                      {t("cart_count")} ({cartCount})
+                    </span>
                   </div>
                 </Link>
               )}

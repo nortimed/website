@@ -5,7 +5,12 @@ import { Command, CommandList } from "./ui/command";
 import { FolderSearch, CheckIcon } from "lucide-react";
 import productsData from "../data/products.json";
 import { Product } from "../types";
+import { useTranslation } from "next-i18next";
 
+/**
+ * ProductCategoryTreeModal always renders a content-sized button with consistent spacing and no fixed width or flex-grow.
+ * To customize appearance, use triggerClassName for color, border, or shadow, but do not set width, flex, min-w-0, max-w-full, or flex-grow.
+ */
 type ProductCategoryFilterDropdownProps = {
   onSelect?: (filter: {
     category: string;
@@ -13,6 +18,9 @@ type ProductCategoryFilterDropdownProps = {
     subDivision?: string;
   }) => void;
   onOpenChange?: (open: boolean) => void;
+  /**
+   * Additional classes for the trigger button. Do not include width, flex, min-w-0, max-w-full, or flex-grow.
+   */
   triggerClassName?: string;
   popoverContentClassName?: string;
 };
@@ -42,6 +50,7 @@ const ProductCategoryTreeModal: React.FC<
   triggerClassName,
   popoverContentClassName,
 }) => {
+  const { t } = useTranslation("common");
   const tree = buildProductTree(productsData as Product[]);
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
@@ -69,7 +78,7 @@ const ProductCategoryTreeModal: React.FC<
     if (selected.subDivision) return selected.subDivision;
     if (selected.subCategory) return selected.subCategory;
     if (selected.category) return selected.category;
-    return "Select category...";
+    return t("select_category");
   };
   // Tree radio selection logic (immediate apply)
   const handleSelect = (cat: string, subCat?: string, subDiv?: string) => {
@@ -135,20 +144,21 @@ const ProductCategoryTreeModal: React.FC<
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className={triggerClassName + " flex items-center w-full min-w-0"}
-            style={{ minWidth: 0 }}
+            className={
+              (triggerClassName ? triggerClassName + " " : "") +
+              "flex items-center gap-x-2 h-12 rounded-lg border border-gray-300 bg-white shadow-md hover:shadow-lg transition-shadow duration-150 px-3 focus:!border-blue-500 focus:!ring-0 active:!border-blue-500 justify-between"
+            }
           >
             <span
               className={
                 getDisplayValue() === "Select category..."
-                  ? "opacity-60 flex-1 min-w-0 truncate text-left"
-                  : "flex-1 min-w-0 truncate text-left"
+                  ? "opacity-60 text-left"
+                  : "text-left"
               }
-              style={{ minWidth: 0 }}
             >
               {getDisplayValue()}
             </span>
-            <FolderSearch className="ml-2 h-4 w-4 shrink-0 opacity-50 flex-shrink-0" />
+            <FolderSearch className="h-4 w-4 shrink-0 opacity-50 flex-shrink-0" />
           </Button>
         </PopoverTrigger>
         <PopoverContent
@@ -161,7 +171,7 @@ const ProductCategoryTreeModal: React.FC<
             <CommandList className="flex-1 min-h-0 h-full">
               <div className="p-4 pb-0 flex flex-col gap-2">
                 <div className="text-lg font-semibold flex items-center gap-2">
-                  Select category
+                  {t("select_category_label")}
                 </div>
               </div>
               <div className="overflow-y-auto px-4 pt-2 pb-0 flex-1">
@@ -260,7 +270,7 @@ const ProductCategoryTreeModal: React.FC<
                 size="sm"
                 onClick={handleClear}
               >
-                Clear
+                {t("clear")}
               </Button>
             </div>
           </Command>

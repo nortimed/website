@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import Navbar from "../components/Navbar";
+import { appWithTranslation } from "next-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 import Footer from "@components/Footer";
@@ -47,4 +48,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default MyApp;
+export default appWithTranslation(MyApp);

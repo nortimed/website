@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import products from "../../data/products.json";
@@ -10,14 +10,49 @@ import {
 } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Tooltip } from "../../components/ui/tooltip";
+import { useTranslation } from "next-i18next";
+
 
 const ProductDetails = () => {
+
+  const { t } = useTranslation("common");
   const router = useRouter();
   const { slug } = router.query;
 
-  const product = products.find(
-    (p) => p.name.toLowerCase().replace(/\s+/g, "-") === slug,
+
+  // Always call hooks, even if router is not ready or slug is not defined
+  // Use a fallback for product if slug is not ready
+  let product: typeof products[0] | undefined = undefined;
+  if (typeof slug === "string") {
+    product = products.find(
+      (p) => p.name.toLowerCase().replace(/\s+/g, "-") === slug,
+    );
+  }
+
+  const [selectedColor, setSelectedColor] = useState(
+    product && product.colorOptions[0] ? product.colorOptions[0] : ""
   );
+  const [tooltipOpenColor, setTooltipOpenColor] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!selectedColor) return;
+    setTooltipOpenColor(selectedColor);
+    const timeout = setTimeout(() => setTooltipOpenColor(null), 500);
+    return () => clearTimeout(timeout);
+  }, [selectedColor]);
+
+  // Wait for router to be ready and slug to be defined
+  if (!router.isReady || typeof slug !== "string") {
+    return (
+      <div className="flex flex-col min-h-screen">
+        <main className="flex-1 flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center">
+            <span className="inline-block w-12 h-12 mb-4 border-4 border-blue-600 border-t-transparent rounded-full animate-spin shadow-lg" aria-label="Loading" />
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -27,21 +62,6 @@ const ProductDetails = () => {
       </div>
     );
   }
-
-  const [selectedColor, setSelectedColor] = React.useState(
-    product.colorOptions[0] || "",
-  );
-  const [tooltipOpenColor, setTooltipOpenColor] = React.useState<string | null>(
-    null,
-  );
-
-  // When selectedColor changes, show tooltip for 1s
-  React.useEffect(() => {
-    if (!selectedColor) return;
-    setTooltipOpenColor(selectedColor);
-    const timeout = setTimeout(() => setTooltipOpenColor(null), 500);
-    return () => clearTimeout(timeout);
-  }, [selectedColor]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -102,19 +122,18 @@ const ProductDetails = () => {
                             <Tooltip
                               key={color}
                               content={color}
-                              open={open || undefined}
+                              open={!!open}
                             >
                               <button
                                 type="button"
                                 aria-label={color}
                                 onClick={() => setSelectedColor(color)}
-                                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all outline-none ${
-                                  isSelected
-                                    ? "border-blue-600 shadow-[0_0_0_4px_rgba(0,0,0,0.18)] opacity-100"
-                                    : selectedColor
-                                      ? "border-gray-300 opacity-40"
-                                      : "border-gray-300 opacity-100"
-                                }`}
+                                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all outline-none ${isSelected
+                                  ? "border-blue-600 shadow-[0_0_0_4px_rgba(0,0,0,0.18)] opacity-100"
+                                  : selectedColor
+                                    ? "border-gray-300 opacity-40"
+                                    : "border-gray-300 opacity-100"
+                                  }`}
                                 style={{
                                   backgroundColor: color.toLowerCase(),
                                   transition: "opacity 0.3s",
@@ -146,7 +165,7 @@ const ProductDetails = () => {
                         let cart: any[] = [];
                         try {
                           cart = JSON.parse(Cookies.get("quoteCart") || "[]");
-                        } catch {}
+                        } catch { }
                         // Avoid duplicates (same product+color)
                         if (
                           !cart.some(
@@ -178,5 +197,18 @@ const ProductDetails = () => {
     </div>
   );
 };
+
+
+import { GetServerSidePropsContext } from 'next';
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const locale = context.locale || 'en';
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
+}
 
 export default ProductDetails;
