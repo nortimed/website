@@ -1,0 +1,25 @@
+# Configuration for Release Drafter
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'feature'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'bug'
+  - title: '🧰 Maintenance'
+    labels:
+      - 'chore'
+  - title: '📝 Documentation'
+    labels:
+      - 'docs'
+
+change-template: '- $TITLE (#$NUMBER) @$AUTHOR'
+no-changes-template: '- No changes'
+
+exclude-labels:
+  - 'skip-changelog'
+
+sort-direction: descending
