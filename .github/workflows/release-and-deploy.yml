@@ -1,0 +1,70 @@
+name: Release and Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Bump version and create tag
+        id: version
+        run: |
+          NEW_VERSION=$(npm version patch --no-git-tag-version)
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore: release $NEW_VERSION [skip ci]"
+          git tag $NEW_VERSION
+          git push origin main --tags
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Generate release notes
+        id: notes
+        uses: release-drafter/release-drafter@v6
+        with:
+          config-name: release-drafter.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          body: ${{ steps.notes.outputs.body }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+      - name: Generate login-config.json for deployment
+        run: |
+          chmod +x ./scripts/generate-login-config.sh
+          LOGIN_USERNAME="${{ secrets.LOGIN_USERNAME }}" LOGIN_PASSWORD="${{ secrets.LOGIN_PASSWORD }}" ./scripts/generate-login-config.sh
+
+      - name: Build Next.js app
+        run: bun run build
+
+      - name: Deploy to PTServidor via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.PTSERVIDOR_FTP_SERVER }}
+          username: ${{ secrets.PTSERVIDOR_FTP_USERNAME }}
+          password: ${{ secrets.PTSERVIDOR_FTP_PASSWORD }}
+          local-dir: ./out
+          server-dir: ${{ secrets.PTSERVIDOR_FTP_REMOTE_DIR || '/' }}

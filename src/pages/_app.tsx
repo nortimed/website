@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import Navbar from "../components/Navbar";
+import StaticLoginGuard from "../components/StaticLoginGuard";
 import { appWithTranslation } from "next-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
@@ -24,27 +25,29 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [router.events]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <main className="flex-1">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={router.route}
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.01 }}
-            transition={{ duration: 0.45, ease: "easeInOut" }}
-            className="flex flex-col min-h-screen"
-            style={{ minHeight: "100vh" }}
-          >
-            <div className="flex-1">
-              <Component {...pageProps} />
-            </div>
-            <Footer />
-          </motion.div>
-        </AnimatePresence>
-      </main>
-    </div>
+    <StaticLoginGuard>
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="flex-1">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={router.route}
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.01 }}
+              transition={{ duration: 0.45, ease: "easeInOut" }}
+              className="flex flex-col min-h-screen"
+              style={{ minHeight: "100vh" }}
+            >
+              <div className="flex-1">
+                <Component {...pageProps} />
+              </div>
+              <Footer />
+            </motion.div>
+          </AnimatePresence>
+        </main>
+      </div>
+    </StaticLoginGuard>
   );
 }
 
