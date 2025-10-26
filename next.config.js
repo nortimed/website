@@ -1,5 +1,6 @@
-const { i18n } = require("./next-i18next.config");
-module.exports = {
+import { i18n } from "./next-i18next.config";
+
+export default {
   turbopack: {},
   reactStrictMode: true,
   images: {
