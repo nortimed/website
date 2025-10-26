@@ -1,7 +1,7 @@
 {
   "functions": {
     "*/**": {
-      "includeFiles": ["next-i18next.config.js"]
+      "includeFiles": "next-i18next.config.js"
     }
   }
 }
