@@ -1,6 +1,6 @@
-import { i18n } from "./next-i18next.config";
+import i18nextConfig from "./next-i18next.config.js";
 
-export default {
+const config = {
   turbopack: {},
   reactStrictMode: true,
   images: {
@@ -11,9 +11,11 @@ export default {
       },
     ],
   },
-  i18n,
   webpack: (config) => {
     // Custom webpack configurations can be added here
     return config;
   },
+  ...i18nextConfig,
 };
+
+export default config;
