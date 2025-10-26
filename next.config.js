@@ -3,7 +3,11 @@ module.exports = {
   turbopack: {},
   reactStrictMode: true,
   images: {
-    domains: ["example.com"], // Replace with your image domains
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'nortimed.com',
+    ],
   },
   i18n,
   webpack: (config) => {
