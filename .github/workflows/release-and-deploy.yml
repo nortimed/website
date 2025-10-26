@@ -52,16 +52,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-      - name: Ensure out directory exists
-        run: mkdir -p ./out
+
+      - name: Build Next.js app
+        run: bun run build
+
+      - name: Export static site
+        run: bunx next export
 
       - name: Generate login-config.json for deployment
         run: |
           chmod +x ./scripts/generate-login-config.sh
           LOGIN_USERNAME="${{ secrets.LOGIN_USERNAME }}" LOGIN_PASSWORD="${{ secrets.LOGIN_PASSWORD }}" ./scripts/generate-login-config.sh
-
-      - name: Build Next.js app
-        run: bun run build
 
       - name: Deploy to PTServidor via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
