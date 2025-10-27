@@ -1,4 +1,4 @@
-import i18nextConfig from "./next-i18next.config.js";
+import i18n from "./next-i18next.config.js";
 
 const config = {
   turbopack: {},
@@ -11,11 +11,11 @@ const config = {
       },
     ],
   },
+  i18n,
   webpack: (config) => {
     // Custom webpack configurations can be added here
     return config;
-  },
-  ...i18nextConfig,
+  }
 };
 
 export default config;
